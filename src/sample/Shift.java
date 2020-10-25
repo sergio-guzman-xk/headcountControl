@@ -2,7 +2,7 @@ package sample;
 
 public class Shift {
 
-    private double pk1;
+    private int pk1;
     private String batch_uid;
     private String description;
     private String time;
@@ -10,18 +10,18 @@ public class Shift {
     public Shift() {
     }
 
-    public Shift(double pk1, String batch_uid, String description, String time) {
+    public Shift(int pk1, String batch_uid, String description, String time) {
         this.pk1 = pk1;
         this.batch_uid = batch_uid;
         this.description = description;
         this.time = time;
     }
 
-    public double getPk1() {
+    public int getPk1() {
         return pk1;
     }
 
-    public void setPk1(double pk1) {
+    public void setPk1(int pk1) {
         this.pk1 = pk1;
     }
 

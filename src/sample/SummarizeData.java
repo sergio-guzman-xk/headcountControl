@@ -8,15 +8,16 @@ public class SummarizeData {
     private String campaign_name;
     private String shift;
     private String Position;
-    private double employees_pk1;
-    private double campaigns_pk1;
-    private double shifts_pk1;
-    private double positions_pk1;
+    private int employees_pk1;
+    private int campaigns_pk1;
+    private int shifts_pk1;
+    private int positions_pk1;
 
     public SummarizeData() {
     }
 
-    public SummarizeData(String employee_id, String first_name, String last_name, String campaign_name, String shift, String position, double employees_pk1, double campaigns_pk1, double shifts_pk1, double positions_pk1) {
+    public SummarizeData(String employee_id, String first_name, String last_name, String campaign_name, String shift,
+                         String position, int employees_pk1, int campaigns_pk1, int shifts_pk1, int positions_pk1) {
         this.employee_id = employee_id;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -29,35 +30,35 @@ public class SummarizeData {
         this.positions_pk1 = positions_pk1;
     }
 
-    public double getEmployees_pk1() {
+    public int getEmployees_pk1() {
         return employees_pk1;
     }
 
-    public void setEmployees_pk1(double employees_pk1) {
+    public void setEmployees_pk1(int employees_pk1) {
         this.employees_pk1 = employees_pk1;
     }
 
-    public double getCampaigns_pk1() {
+    public int getCampaigns_pk1() {
         return campaigns_pk1;
     }
 
-    public void setCampaigns_pk1(double campaigns_pk1) {
+    public void setCampaigns_pk1(int campaigns_pk1) {
         this.campaigns_pk1 = campaigns_pk1;
     }
 
-    public double getShifts_pk1() {
+    public int getShifts_pk1() {
         return shifts_pk1;
     }
 
-    public void setShifts_pk1(double shifts_pk1) {
+    public void setShifts_pk1(int shifts_pk1) {
         this.shifts_pk1 = shifts_pk1;
     }
 
-    public double getPositions_pk1() {
+    public int getPositions_pk1() {
         return positions_pk1;
     }
 
-    public void setPositions_pk1(double positions_pk1) {
+    public void setPositions_pk1(int positions_pk1) {
         this.positions_pk1 = positions_pk1;
     }
 

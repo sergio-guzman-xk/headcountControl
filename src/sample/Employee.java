@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Employee {
 
-    private double pk1;
+    private int pk1;
     private String batch_uid;
     private String employee_id;
     private String first_name;
@@ -18,7 +18,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(double pk1, String batch_uid, String employee_id, String first_name, String last_name, String email, double salary, Date contract_date, String national_id) {
+    public Employee(int pk1, String batch_uid, String employee_id, String first_name, String last_name, String email, double salary, Date contract_date, String national_id) {
         this.pk1 = pk1;
         this.batch_uid = batch_uid;
         this.employee_id = employee_id;
@@ -30,7 +30,7 @@ public class Employee {
         this.national_id = national_id;
     }
 
-    public void setPk1(double pk1) {
+    public void setPk1(int pk1) {
         this.pk1 = pk1;
     }
 
@@ -66,7 +66,7 @@ public class Employee {
         this.national_id = national_id;
     }
 
-    public double getPk1() {
+    public int getPk1() {
         return pk1;
     }
 

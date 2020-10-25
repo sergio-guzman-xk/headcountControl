@@ -44,7 +44,42 @@ public class Controller {
     private TextField campaignIdTxtField;
     @FXML
     private TextField shiftIdTxtField;
-
+    @FXML
+    private TextField showEmpBatchUid;
+    @FXML
+    private TextField showEmpEmpId;
+    @FXML
+    private TextField showEmpFirstN;
+    @FXML
+    private TextField showEmpLastN;
+    @FXML
+    private TextField showEmpEmail;
+    @FXML
+    private TextField showEmpSalary;
+    @FXML
+    private TextField showEmpConDate;
+    @FXML
+    private TextField showEmpNatId;
+    @FXML
+    private TextField showCampBatchUid;
+    @FXML
+    private TextField showCampCampId;
+    @FXML
+    private TextField showCampCampN;
+    @FXML
+    private TextField showCampHeadC;
+    @FXML
+    private TextField showCampRev;
+    @FXML
+    private TextField showCampPriority;
+    @FXML
+    private TextField showCampConRen;
+    @FXML
+    private TextField showShiftBatchUid;
+    @FXML
+    private TextField showShiftDesc;
+    @FXML
+    private TextField showShiftSchedule;
 
     AppData newData = new AppData();
 
@@ -64,14 +99,9 @@ public class Controller {
         & employeeEmailTextData.isEmpty() & campaignNameTextData.isEmpty() & campaignIdTextData.isEmpty() & shiftTextData.isEmpty()) {
             sumData = newData.querySummarize();
         } else {
-            System.out.println("EmpID: " + employeeIdTextData);
             sumData = newData.querySummarize(employeeIdTextData, nationalIdTextData, firstNameTextData, lastNameTextData,
                     employeeEmailTextData, campaignNameTextData, campaignIdTextData, shiftTextData);
         }
-        /*for (SummarizeData entry : sumData) {
-            System.out.println("Employee ID: " + entry.getEmployee_id() + " Name: " + entry.getFirst_name() + " " + entry.getLast_name() + " Campaign Name: " +
-                    entry.getCampaign_name() + " Schedule: " + entry.getShift() + " Position: " + entry.getPosition());
-        }*/
         if (sumData.isEmpty()) {
             System.out.println("No results");
         } else {
@@ -86,5 +116,34 @@ public class Controller {
 
             }
         }
+    }
+
+    public void itemSelected () throws SQLException {
+        SummarizeData selectedData = showTable.getSelectionModel().getSelectedItem();
+        if(selectedData != null) {
+            System.out.println("Item was selected");
+            Employee employee = newData.queryEmployee(selectedData.getEmployees_pk1());
+            Campaign campaign = newData.queryCampaign(selectedData.getCampaigns_pk1());
+            Shift shift = newData.queryShift(selectedData.getShifts_pk1());
+            showEmpBatchUid.setText(employee.getBatch_uid());
+            showEmpEmpId.setText(employee.getEmployee_id());
+            showEmpFirstN.setText(employee.getFirst_name());
+            showEmpLastN.setText(employee.getLast_name());
+            showEmpEmail.setText(employee.getEmail());
+            showEmpSalary.setText(String.format("%.0f",employee.getSalary()));
+            showEmpConDate.setText(String.valueOf(employee.getContract_date()));
+            showEmpNatId.setText(employee.getNational_id());
+            showCampBatchUid.setText(campaign.getBatch_uid());
+            showCampCampId.setText(campaign.getCampaign_id());
+            showCampCampN.setText(campaign.getName());
+            showCampConRen.setText(String.valueOf(campaign.getRenew_date()));
+            showCampRev.setText(String.format("%.0f", campaign.getRevenue()));
+            showCampHeadC.setText(String.format("%.0f", campaign.getHeadcount_req()));
+            showCampPriority.setText(campaign.getPriority());
+            showShiftBatchUid.setText(shift.getBatch_uid());
+            showShiftDesc.setText(shift.getDescription());
+            showShiftSchedule.setText(shift.getTime());
+        }
+
     }
 }

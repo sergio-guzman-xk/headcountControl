@@ -23,7 +23,7 @@ public class AppData {
 
     private static final String TABLE_CAMPAIGNS = "campaigns";
     private static final String COLUMN_CAMPAIGNS_PK1 = "pk1";
-    private static final String COLUMN_CAMPAIGNS_BATCH_UDI = "batch_udi";
+    private static final String COLUMN_CAMPAIGNS_BATCH_UID = "batch_uid";
     private static final String COLUMN_CAMPAIGNS_CAMP_NAME = "camp_name";
     private static final String COLUMN_CAMPAIGNS_CAMPAIGN_ID = "campaign_id";
     private static final String COLUMN_CAMPAIGNS_CONTRACT_DATE = "contract_date";
@@ -34,13 +34,13 @@ public class AppData {
 
     private static final String TABLE_POSITIONS = "positions";
     private static final String COLUMN_POSITIONS_PK1 = "pk1";
-    private static final String COLUMN_POSITIONS_BATCH_UDI = "batch_uid";
+    private static final String COLUMN_POSITIONS_BATCH_UID = "batch_uid";
     private static final String COLUMN_POSITIONS_TITLE = "title";
     private static final String COLUMN_POSITIONS_DESCRIPTION = "description";
 
     private static final String TABLE_SHIFTS = "shifts";
     private static final String COLUMN_SHIFTS_PK1 = "pk1";
-    private static final String COLUMN_SHIFTS_BATCH_UID = "batch_udi";
+    private static final String COLUMN_SHIFTS_BATCH_UID = "batch_uid";
     private static final String COLUMN_SHIFTS_DESCRIPTION = "description";
     private static final String COLUMN_SHIFTS_SCHEDULE = "schedule";
 
@@ -71,6 +71,10 @@ public class AppData {
             " JOIN " + TABLE_POSITIONS + " ON " + TABLE_EMPLOYEES_CAMPAIGNS + "." + COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1
             + " = " + TABLE_POSITIONS + "." + COLUMN_POSITIONS_PK1;
 
+    private static final String QUERY_EMPLOYEES = "SELECT * FROM " + TABLE_EMPLOYEES;
+    private static final String QUERY_CAMPAIGNS = "SELECT * FROM " + TABLE_CAMPAIGNS;
+    private static final String QUERY_SHIFTS = "SELECT * FROM " + TABLE_SHIFTS;
+
     StringBuilder sb = new StringBuilder();
     private Connection conn;
 
@@ -88,8 +92,6 @@ public class AppData {
     public List<SummarizeData> querySummarize () throws  SQLException{
 
         StringBuilder sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
-        //System.out.println(sb.toString());
-
         try (Connection db = connect();
             Statement statement1 = db.createStatement();
             ResultSet results1 = statement1.executeQuery(sb.toString())){
@@ -97,10 +99,10 @@ public class AppData {
             List<SummarizeData> summarizeData = new ArrayList<>();
             while (results1.next()) {
                 SummarizeData sumData = new SummarizeData();
-                sumData.setEmployees_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1));
-                sumData.setCampaigns_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1));
-                sumData.setShifts_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1));
-                sumData.setPositions_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1));
+                sumData.setEmployees_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1));
+                sumData.setCampaigns_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1));
+                sumData.setShifts_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1));
+                sumData.setPositions_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1));
                 sumData.setEmployee_id(results1.getString(COLUMN_EMPLOYEES_EMPLOYEE_ID));
                 sumData.setFirst_name(results1.getString(COLUMN_EMPLOYEES_FIRST_NAME));
                 sumData.setLast_name(results1.getString(COLUMN_EMPLOYEES_LAST_NAME));
@@ -126,9 +128,6 @@ public class AppData {
         boolean preCondition = false;
         sb.append(" WHERE ");
         if (!empCheck.isEmpty()) {
-            if(preCondition) {
-                sb.append(" AND ");
-            }
             sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_EMPLOYEE_ID);
             sb.append(" = ");
             sb.append("'");
@@ -228,10 +227,10 @@ public class AppData {
             List<SummarizeData> summarizeData = new ArrayList<>();
             while (results1.next()) {
                 SummarizeData sumData = new SummarizeData();
-                sumData.setEmployees_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1));
-                sumData.setCampaigns_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1));
-                sumData.setShifts_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1));
-                sumData.setPositions_pk1(results1.getDouble(COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1));
+                sumData.setEmployees_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1));
+                sumData.setCampaigns_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1));
+                sumData.setShifts_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1));
+                sumData.setPositions_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1));
                 sumData.setEmployee_id(results1.getString(COLUMN_EMPLOYEES_EMPLOYEE_ID));
                 sumData.setFirst_name(results1.getString(COLUMN_EMPLOYEES_FIRST_NAME));
                 sumData.setLast_name(results1.getString(COLUMN_EMPLOYEES_LAST_NAME));
@@ -249,16 +248,21 @@ public class AppData {
         }
     }
 
-    public List<Employee> queryEmployee () throws SQLException {
+    public Employee queryEmployee (int pk1) throws SQLException {
 
+        StringBuilder sb = new StringBuilder(QUERY_EMPLOYEES);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_EMPLOYEES_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(pk1);
+        sb.append("'");
         try (Connection db = connect();
-             Statement statement1 = db.createStatement();
-             ResultSet results1 = statement1.executeQuery("SELECT * FROM " + TABLE_EMPLOYEES)){
-
-            List<Employee> employeesList = new ArrayList<>();
+            Statement statement1 = db.createStatement();
+            ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Employee employee = new Employee();
             while (results1.next()) {
-                Employee employee = new Employee();
-                employee.setPk1(results1.getDouble(COLUMN_EMPLOYEES_PK1));
+                employee.setPk1(results1.getInt(COLUMN_EMPLOYEES_PK1));
                 employee.setBatch_uid(results1.getString(COLUMN_EMPLOYEES_BATCH_UID));
                 employee.setEmployee_id(results1.getString(COLUMN_EMPLOYEES_EMPLOYEE_ID));
                 employee.setFirst_name(results1.getString(COLUMN_EMPLOYEES_FIRST_NAME));
@@ -267,12 +271,66 @@ public class AppData {
                 employee.setSalary(results1.getDouble(COLUMN_EMPLOYEES_SALARY));
                 employee.setContract_date(results1.getDate(COLUMN_EMPLOYEES_CONTRACT_DATE));
                 employee.setNational_id(results1.getString(COLUMN_EMPLOYEES_NATIONAL_ID));
-
-                employeesList.add(employee);
             }
             closeConnection(db);
-            return employeesList;
+            return employee;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+            }
+        }
 
+    public Campaign queryCampaign (int pk1) {
+        StringBuilder sb = new StringBuilder(QUERY_CAMPAIGNS);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_CAMPAIGNS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(pk1);
+        sb.append("'");
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Campaign campaign = new Campaign();
+            while (results1.next()) {
+                campaign.setPk1(results1.getInt(COLUMN_CAMPAIGNS_PK1));
+                campaign.setBatch_uid(results1.getString(COLUMN_CAMPAIGNS_BATCH_UID));
+                campaign.setName(results1.getString(COLUMN_CAMPAIGNS_CAMP_NAME));
+                campaign.setCampaign_id(results1.getString(COLUMN_CAMPAIGNS_CAMPAIGN_ID));
+                campaign.setContract_date(results1.getDate(COLUMN_CAMPAIGNS_CONTRACT_DATE));
+                campaign.setRenew_date(results1.getDate(COLUMN_CAMPAIGNS_RENEW_DATE));
+                campaign.setHeadcount_req(results1.getDouble(COLUMN_CAMPAIGNS_HEADCOUNT_REQ));
+                campaign.setRevenue(results1.getDouble(COLUMN_CAMPAIGNS_REVENUE));
+                campaign.setPriority(results1.getString(COLUMN_CAMPAIGNS_PRIORITY));
+            }
+            closeConnection(db);
+            return campaign;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public Shift queryShift (int pk1) {
+        StringBuilder sb = new StringBuilder(QUERY_SHIFTS);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_SHIFTS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(pk1);
+        sb.append("'");
+        try (Connection db = connect();
+            Statement statement1 = db.createStatement();
+            ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Shift shift = new Shift();
+            while (results1.next()) {
+                shift.setPk1(results1.getInt(COLUMN_SHIFTS_PK1));
+                shift.setBatch_uid(results1.getString(COLUMN_SHIFTS_BATCH_UID));
+                shift.setDescription(results1.getString(COLUMN_SHIFTS_DESCRIPTION));
+                shift.setTime(results1.getString(COLUMN_SHIFTS_SCHEDULE));
+            }
+            closeConnection(db);
+            return shift;
         } catch (SQLException e) {
             System.out.println("ERROR while trying to query: " + e.getMessage());
             return null;
