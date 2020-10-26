@@ -7,7 +7,7 @@ public class SummarizeData {
     private String last_name;
     private String campaign_name;
     private String shift;
-    private String Position;
+    private String position;
     private int employees_pk1;
     private int campaigns_pk1;
     private int shifts_pk1;
@@ -23,7 +23,7 @@ public class SummarizeData {
         this.last_name = last_name;
         this.campaign_name = campaign_name;
         this.shift = shift;
-        Position = position;
+        this.position = position;
         this.employees_pk1 = employees_pk1;
         this.campaigns_pk1 = campaigns_pk1;
         this.shifts_pk1 = shifts_pk1;
@@ -103,10 +103,10 @@ public class SummarizeData {
     }
 
     public String getPosition() {
-        return Position;
+        return position;
     }
 
     public void setPosition(String position) {
-        Position = position;
+        this.position = position;
     }
 }
