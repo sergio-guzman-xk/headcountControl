@@ -74,6 +74,7 @@ public class AppData {
     private static final String QUERY_EMPLOYEES = "SELECT * FROM " + TABLE_EMPLOYEES;
     private static final String QUERY_CAMPAIGNS = "SELECT * FROM " + TABLE_CAMPAIGNS;
     private static final String QUERY_SHIFTS = "SELECT * FROM " + TABLE_SHIFTS;
+//    private static final String
 
     StringBuilder sb = new StringBuilder();
     private Connection conn;
@@ -89,7 +90,7 @@ public class AppData {
         return conn;
     }
 
-    public List<SummarizeData> querySummarize () throws  SQLException{
+    public List<SummarizeData> querySummarize() throws  SQLException{
 
         StringBuilder sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
         try (Connection db = connect();
@@ -120,7 +121,7 @@ public class AppData {
         }
     }
 
-    public List<SummarizeData> querySummarize (String empCheck, String natCheck, String firstCheck, String lastCheck, String empEmailCheck,
+    public List<SummarizeData> querySummarize(String empCheck, String natCheck, String firstCheck, String lastCheck, String empEmailCheck,
                                                String campNameCheck, String campIdCheck,
                                                String shiftCheck) throws  SQLException{
 
@@ -248,7 +249,37 @@ public class AppData {
         }
     }
 
-    public Employee queryEmployee (int pk1) throws SQLException {
+    public List<Employee> queryEmployee() throws SQLException {
+
+        StringBuilder sb = new StringBuilder(QUERY_EMPLOYEES);
+        try (Connection db = connect();
+            Statement statement1 = db.createStatement();
+            ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Employee> employeeList = new ArrayList<>();
+            while (results1.next()) {
+                Employee employee = new Employee();
+                employee.setPk1(results1.getInt(COLUMN_EMPLOYEES_PK1));
+                employee.setBatch_uid(results1.getString(COLUMN_EMPLOYEES_BATCH_UID));
+                employee.setEmployee_id(results1.getString(COLUMN_EMPLOYEES_EMPLOYEE_ID));
+                employee.setFirst_name(results1.getString(COLUMN_EMPLOYEES_FIRST_NAME));
+                employee.setLast_name(results1.getString(COLUMN_EMPLOYEES_LAST_NAME));
+                employee.setEmail(results1.getString(COLUMN_EMPLOYEES_EMAIL));
+                employee.setSalary(results1.getDouble(COLUMN_EMPLOYEES_SALARY));
+                employee.setContract_date(results1.getDate(COLUMN_EMPLOYEES_CONTRACT_DATE));
+                employee.setNational_id(results1.getString(COLUMN_EMPLOYEES_NATIONAL_ID));
+
+                employeeList.add(employee);
+            }
+            closeConnection(db);
+            return employeeList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public Employee queryEmployee(int pk1) throws SQLException {
 
         StringBuilder sb = new StringBuilder(QUERY_EMPLOYEES);
         sb.append(" WHERE ");
@@ -280,7 +311,134 @@ public class AppData {
             }
         }
 
-    public Campaign queryCampaign (int pk1) {
+    public List<Employee> queryEmployee(String batchUidCheck, String empIdCheck, String firstCheck, String lastCheck, String emailCheck,
+                                              String salaryCheck, String conDateCheck,
+                                              String natIdCheck) throws  SQLException{
+
+        StringBuilder sb = new StringBuilder(QUERY_EMPLOYEES);
+        boolean preCondition = false;
+        sb.append(" WHERE ");
+        if (!batchUidCheck.isEmpty()) {
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(batchUidCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!empIdCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_EMPLOYEE_ID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(empIdCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!firstCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_FIRST_NAME);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(firstCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!lastCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_LAST_NAME);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(lastCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!emailCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_EMAIL);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(emailCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!salaryCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_SALARY);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(salaryCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!conDateCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_CONTRACT_DATE);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(conDateCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!natIdCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_NATIONAL_ID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(natIdCheck);
+            sb.append("'");
+        }
+
+        System.out.println(sb.toString());
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Employee> employeeList = new ArrayList<>();
+            while (results1.next()) {
+                Employee employee = new Employee();
+                employee.setPk1(results1.getInt(COLUMN_EMPLOYEES_PK1));
+                employee.setBatch_uid(results1.getString(COLUMN_EMPLOYEES_BATCH_UID));
+                employee.setEmployee_id(results1.getString(COLUMN_EMPLOYEES_EMPLOYEE_ID));
+                employee.setFirst_name(results1.getString(COLUMN_EMPLOYEES_FIRST_NAME));
+                employee.setLast_name(results1.getString(COLUMN_EMPLOYEES_LAST_NAME));
+                employee.setEmail(results1.getString(COLUMN_EMPLOYEES_EMAIL));
+                employee.setSalary(results1.getDouble(COLUMN_EMPLOYEES_SALARY));
+                employee.setContract_date(results1.getDate(COLUMN_EMPLOYEES_CONTRACT_DATE));
+                employee.setNational_id(results1.getString(COLUMN_EMPLOYEES_NATIONAL_ID));
+
+                employeeList.add(employee);
+            }
+            closeConnection(db);
+            return employeeList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public Campaign queryCampaign(int pk1) {
         StringBuilder sb = new StringBuilder(QUERY_CAMPAIGNS);
         sb.append(" WHERE ");
         sb.append(COLUMN_CAMPAIGNS_PK1);
@@ -311,7 +469,7 @@ public class AppData {
         }
     }
 
-    public Shift queryShift (int pk1) {
+    public Shift queryShift(int pk1) {
         StringBuilder sb = new StringBuilder(QUERY_SHIFTS);
         sb.append(" WHERE ");
         sb.append(COLUMN_SHIFTS_PK1);
@@ -349,7 +507,7 @@ public class AppData {
         }
     }
 
-    public static void closeConnection (Connection conn) throws SQLException {
+    public static void closeConnection(Connection conn) throws SQLException {
         conn.close();
     }
 

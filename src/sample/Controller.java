@@ -1,13 +1,18 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,12 +85,18 @@ public class Controller {
     private TextField showShiftDesc;
     @FXML
     private TextField showShiftSchedule;
+    @FXML
+    private VBox mainWindow;
+    @FXML
+    private DialogPane interactionWindowDiag;
+    @FXML
+    private AnchorPane employeeChangePane;
 
     AppData newData = new AppData();
 
-    public void performSearch () throws SQLException {
+    public void performSearch() throws SQLException {
         showTable.getItems().clear();
-        String employeeIdTextData = employeeIdTxtField.getText();
+        String employeeIdTextData = employeeIdTxtField.getText().trim();
         String nationalIdTextData = nationalIdTxtField.getText().trim();
         String firstNameTextData = firstNameTxtField.getText().trim();
         String lastNameTextData = lastNameTxtField.getText().trim();
@@ -118,7 +129,7 @@ public class Controller {
         }
     }
 
-    public void itemSelected () throws SQLException {
+    public void itemSelected() throws SQLException {
         SummarizeData selectedData = showTable.getSelectionModel().getSelectedItem();
         if(selectedData != null) {
             System.out.println("Item was selected");
@@ -145,5 +156,66 @@ public class Controller {
             showShiftSchedule.setText(shift.getTime());
         }
 
+    }
+
+    public void interactionRequest() throws IOException {
+        System.out.println("You clicked me");
+//        Scene currentScene = mainWindow.getScene();
+//        Window currentWindow = currentScene.getWindow();
+//        Stage currentStage = (Stage) currentWindow;
+//        Parent root = FXMLLoader.load(getClass().getResource("interactionWindow.fxml"));
+//        Stage newStage = new Stage();
+//        Scene newScene = new Scene(root);
+//        newStage.setScene(newScene);
+//        currentStage.hide();
+//        newStage.show();
+        sceneChange(mainWindow.getScene(), "interactionWindow.fxml");
+    }
+
+    public static void sceneChange(Scene currentScene, String newFXML) throws IOException {
+        Window currentWindow = currentScene.getWindow();
+        Stage currentStage = (Stage) currentWindow;
+        currentStage.hide();
+        Parent root = FXMLLoader.load(Controller.class.getResource(newFXML));
+        Stage newStage = new Stage();
+        Scene newScene = new Scene(root);
+        newStage.setScene(newScene);
+        newStage.show();
+
+    }
+
+    public void handleExit() {
+        // add confirmation box!!!!!!!!!!!!!!!!!!!
+        Platform.exit();
+    }
+
+    public void resetGrid() {
+        showTable.getItems().clear();
+        employeeIdTxtField.clear();
+        nationalIdTxtField.clear();
+        firstNameTxtField.clear();
+        lastNameTxtField.clear();
+        employeeEmailTxtField.clear();
+        campaignNameTxtField.clear();
+        campaignIdTxtField.clear();
+        shiftIdTxtField.clear();
+        showEmpBatchUid.clear();
+        showEmpEmpId.clear();
+        showEmpFirstN.clear();
+        showEmpLastN.clear();
+        showEmpEmail.clear();
+        showEmpSalary.clear();
+        showEmpConDate.clear();
+        showEmpNatId.clear();
+        showCampBatchUid.clear();
+        showCampCampId.clear();
+        showCampCampN.clear();
+        showCampHeadC.clear();
+        showCampRev.clear();
+        showCampPriority.clear();
+        showCampConRen.clear();
+        showShiftBatchUid.clear();
+        showShiftDesc.clear();
+        showShiftSchedule.clear();
     }
 }

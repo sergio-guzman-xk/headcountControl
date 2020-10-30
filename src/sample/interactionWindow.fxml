@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -9,56 +10,67 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0" prefWidth="627.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Button fx:id="interEmpBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Employees" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="5.0" right="5.0" />
-               </GridPane.margin>
-            </Button>
-            <Button fx:id="interCampBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Campaigns" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="5.0" right="5.0" />
-               </GridPane.margin>
-            </Button>
-            <Button fx:id="interShiftBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Shifts" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="5.0" right="5.0" />
-               </GridPane.margin>
-            </Button>
-            <Button fx:id="interAssigBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Assignments" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="5.0" right="5.0" />
-               </GridPane.margin>
-            </Button>
-            <Button fx:id="interCancelBtn" cancelButton="true" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Cancel" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="5.0" right="5.0" />
-               </GridPane.margin>
-            </Button>
-         </children>
-      </GridPane>
-   </center>
-   <top>
-      <Label alignment="TOP_LEFT" text="What do you want to interact with?" textFill="#9f9f9f" BorderPane.alignment="TOP_LEFT">
-         <BorderPane.margin>
-            <Insets left="10.0" top="15.0" />
-         </BorderPane.margin>
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-   </top>
-</BorderPane>
+
+<DialogPane fx:id="interactionWindowDiag" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.interactionWindowController">
+   <content>
+      <BorderPane>
+         <center>
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0" prefWidth="627.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="interEmpBtn" mnemonicParsing="false" onAction="#employeeChangeRequest" prefHeight="107.0" prefWidth="293.0" text="Employees" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="interCampBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Campaigns" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="interShiftBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Shifts" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="interAssigBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Assignments" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="interCancelBtn" cancelButton="true" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Cancel" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="interPosBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Position" GridPane.columnIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </Button>
+               </children>
+            </GridPane>
+         </center>
+         <top>
+            <Label alignment="TOP_LEFT" text="What do you want to interact with?" textFill="#9f9f9f" BorderPane.alignment="TOP_LEFT">
+               <BorderPane.margin>
+                  <Insets left="10.0" top="15.0" />
+               </BorderPane.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </top>
+      </BorderPane>
+   </content>
+</DialogPane>
