@@ -1,5 +1,6 @@
 package sample;
 
+// -- Modeled after the shifts table --
 public class Shift {
 
     private int pk1;

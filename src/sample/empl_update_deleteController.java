@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// -- This is the controller for the employees window UI --
 public class empl_update_deleteController {
 
     @FXML
@@ -65,6 +66,7 @@ public class empl_update_deleteController {
 
     AppData newData = new AppData();
 
+    // -- Search Button --
     public void employeePaneSearch() throws SQLException {
         showEmpTable.getItems().clear();
         employeeBatchUidData = showEmpBatchUid.getText().trim();
@@ -76,7 +78,9 @@ public class empl_update_deleteController {
         employeeConDateData = showEmpConDate.getText().trim();
         employeeNatIdData = showEmpNatId.getText().trim();
 
+        // -- Define a list of Employee objects --
         List<Employee> employees;
+        // -- Checks if there are any search parameters --
         if (employeeBatchUidData.isEmpty() & employeeEmpIdData.isEmpty() & employeeFirstNameData.isEmpty() & employeeLastNameData.isEmpty()
                 & employeeEmailData.isEmpty() & employeeSalaryData.isEmpty() & employeeConDateData.isEmpty() & employeeNatIdData.isEmpty()) {
             employees = newData.queryEmployee();
@@ -84,6 +88,7 @@ public class empl_update_deleteController {
             employees = newData.queryEmployee(employeeBatchUidData, employeeEmpIdData, employeeFirstNameData, employeeLastNameData,
                     employeeEmailData, employeeSalaryData, employeeConDateData, employeeNatIdData);
         }
+        // -- Checks if there are any results being returned from the query --
         if (employees.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("");
@@ -105,10 +110,10 @@ public class empl_update_deleteController {
         }
     }
 
+    // -- Something is selected in the table view --
     public void employeeSelected() {
         Employee selectedEmployee = showEmpTable.getSelectionModel().getSelectedItem();
         if(selectedEmployee != null) {
-            System.out.println("Item was selected");
             showEmpBatchUid.setText(selectedEmployee.getBatch_uid());
             showEmpEmpId.setText(selectedEmployee.getEmployee_id());
             showEmpFirstN.setText(selectedEmployee.getFirst_name());
@@ -121,7 +126,9 @@ public class empl_update_deleteController {
         }
     }
 
+    // -- Create Button --
     public void employeePaneCreate() {
+        // -- Creates and empty employee object --
         Employee newEmployee = new Employee();
         employeeBatchUidData = showEmpBatchUid.getText().trim();
         employeeEmpIdData = showEmpEmpId.getText().trim();
@@ -132,6 +139,7 @@ public class empl_update_deleteController {
         employeeConDateData = showEmpConDate.getText().trim();
         employeeNatIdData = showEmpNatId.getText().trim();
 
+        // -- Checks if there are any empty fields --
         if(employeeBatchUidData.isEmpty() || employeeEmpIdData.isEmpty() || employeeFirstNameData.isEmpty() ||
                 employeeLastNameData.isEmpty() || employeeEmailData.isEmpty() || employeeSalaryData.isEmpty() ||
                 employeeConDateData.isEmpty() || employeeNatIdData.isEmpty()) {
@@ -140,6 +148,7 @@ public class empl_update_deleteController {
             alert.showAndWait();
         } else {
             try {
+                // -- Use set methods to set the the values of the employee object created before --
                 newEmployee.setBatch_uid(employeeBatchUidData);
                 newEmployee.setEmployee_id(employeeEmpIdData);
                 newEmployee.setFirst_name(employeeFirstNameData);
@@ -148,7 +157,10 @@ public class empl_update_deleteController {
                 newEmployee.setSalary(Double.parseDouble(employeeSalaryData));
                 newEmployee.setContract_date(Date.valueOf(employeeConDateData));
                 newEmployee.setNational_id(employeeNatIdData);
-                int success = newData.insertEmployees(newEmployee);
+                // -- Run the insertEmployee() to create the user in the DB. Assign the returned value to success --
+                int success = newData.insertEmployee(newEmployee);
+                // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
+                // -- If the above was a success then refresh the tableview to show the new data --
                 if(success != 0) {
                     employeePaneSearch();
                 }
@@ -161,22 +173,27 @@ public class empl_update_deleteController {
         }
     }
 
+    // -- Update Button. Needs a selected item from the table view --
     public void employeePaneUpdate() {
         Employee selectedEmployee = showEmpTable.getSelectionModel().getSelectedItem();
         if(selectedEmployee != null) {
-            System.out.println("Item was selected");
             try {
+                // -- checks if the Salary is a valid double --
                 Double newEmpSalary = Double.parseDouble(showEmpSalary.getText());
                 try {
+                    // -- checks if the data is a valua date format yyyy-mm-dd --
                     Date newEmpConDate = Date.valueOf(showEmpConDate.getText());
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("UPDATE RECORD");
                     alert.setHeaderText("Are you sure? Press OK to confirm or CANCEL to abort.");
                     Optional<ButtonType> result = alert.showAndWait();
                     if(result.isPresent() && (result.get() == ButtonType.OK)) {
+                        /* -- If the user hit ok in the confirmation box it calls the overload method updateEmployee()
+                        * and stores the returned value -- */
                         int success = newData.updateEmployee(selectedEmployee, showEmpBatchUid.getText().trim(), showEmpEmpId.getText().trim(),
                                 showEmpFirstN.getText().trim(), showEmpLastN.getText().trim(), showEmpEmail.getText().trim(),
                                 newEmpSalary, newEmpConDate, showEmpNatId.getText().trim());
+                        // If the value is different from 0 it was success, then it will refresh the tableview to show the updated record --
                         if(success != 0){
                             employeePaneSearch();
                         }
@@ -200,6 +217,7 @@ public class empl_update_deleteController {
         }
     }
 
+    // -- Delete Button. Requires an item selected in the tableview --
     public void employeePaneDelete() throws SQLException {
         Employee selectedEmployee = showEmpTable.getSelectionModel().getSelectedItem();
         if(selectedEmployee != null) {
@@ -208,6 +226,7 @@ public class empl_update_deleteController {
             alert.setHeaderText("Are you sure? Press OK to confirm or CANCEL to abort.");
             Optional<ButtonType> result = alert.showAndWait();
             if(result.isPresent() && (result.get() == ButtonType.OK)) {
+                // -- Calls deleteEmployee() and then resets all the fields in the UI and refreshes the tableview --
                 newData.deleteEmployee(selectedEmployee);
                 employeePaneReset();
                 employeePaneSearch();
@@ -220,6 +239,7 @@ public class empl_update_deleteController {
         }
     }
 
+    // -- Reset Button --
     public void employeePaneReset() {
         showEmpBatchUid.clear();
         showEmpEmpId.clear();
@@ -232,6 +252,7 @@ public class empl_update_deleteController {
         showEmpTable.getItems().clear();
     }
 
+    // -- Exit Button. This changes the Scene to return to the Main Window --
     public void empExitHandler() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("EXIT");

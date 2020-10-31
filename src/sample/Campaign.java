@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+// -- Modeled after the campaigns table --
 public class Campaign {
 
     private int pk1;

@@ -12,12 +12,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// -- This class holds all the logic of the application --
 public class AppData {
-
+    // -- Connection to the DB is defined --
     private static final String dbUrl = "jdbc:postgresql://ruby.db.elephantsql.com:5432/kmkwzkbq";
     private static final String user = "kmkwzkbq";
     private static final String password = "2W1bAos2DLv_DnDTQwdVj6HVc4PvAKfQ";
-
+    // -- All tables are defined as variables --
     private static final String TABLE_EMPLOYEES = "employees";
     private static final String COLUMN_EMPLOYEES_PK1 = "pk1";
     private static final String COLUMN_EMPLOYEES_BATCH_UID = "batch_uid";
@@ -28,7 +29,7 @@ public class AppData {
     private static final String COLUMN_EMPLOYEES_SALARY = "salary";
     private static final String COLUMN_EMPLOYEES_CONTRACT_DATE = "contract_date";
     private static final String COLUMN_EMPLOYEES_NATIONAL_ID = "national_id";
-
+    // -- All columns are defined as variables --
     private static final String TABLE_CAMPAIGNS = "campaigns";
     private static final String COLUMN_CAMPAIGNS_PK1 = "pk1";
     private static final String COLUMN_CAMPAIGNS_BATCH_UID = "batch_uid";
@@ -60,7 +61,7 @@ public class AppData {
     private static final String COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1 = "shifts_pk1";
     private static final String COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE = "start_date";
     private static final String COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1 = "positions_pk1";
-
+    // -- All sql statements are defined as variables --
     private static final String QUERY_SUMMARIZE_DATA_RETRIEVE = "SELECT " + TABLE_EMPLOYEES_CAMPAIGNS  + "."
             + COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1 + ", " + TABLE_EMPLOYEES_CAMPAIGNS  + "." + COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1
             + ", " + TABLE_EMPLOYEES_CAMPAIGNS  + "." + COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1 + ", "
@@ -92,7 +93,7 @@ public class AppData {
 
     StringBuilder sb = new StringBuilder();
     private Connection conn;
-
+    // -- Connection to the DB is defined --
     public Connection connect() throws SQLException {
         try {
             conn = DriverManager.getConnection(dbUrl, user, password);
@@ -104,13 +105,15 @@ public class AppData {
         return conn;
     }
 
+    // -- Query for the SummarizeData object use in the main UI --
+    // -- This is used when the master doesn't have any data --
     public List<SummarizeData> querySummarize() throws  SQLException{
 
         sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
         try (Connection db = connect();
             Statement statement1 = db.createStatement();
             ResultSet results1 = statement1.executeQuery(sb.toString())){
-
+            // -- List of SummarizeData objects for showing in the main UI --
             List<SummarizeData> summarizeData = new ArrayList<>();
             while (results1.next()) {
                 SummarizeData sumData = new SummarizeData();
@@ -135,11 +138,13 @@ public class AppData {
         }
     }
 
+    // -- Method overload. This one is used when the master has any data for an specified search --
     public List<SummarizeData> querySummarize(String empCheck, String natCheck, String firstCheck, String lastCheck, String empEmailCheck,
                                                String campNameCheck, String campIdCheck,
                                                String shiftCheck) throws  SQLException{
 
         sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
+        // -- preCondition checks if there is a need of an  "AND" in the "WHERE" clause --
         boolean preCondition = false;
         sb.append(" WHERE ");
         if (!empCheck.isEmpty()) {
@@ -234,7 +239,6 @@ public class AppData {
             sb.append("'");
         }
 
-        System.out.println(sb.toString());
         try (Connection db = connect();
              Statement statement1 = db.createStatement();
              ResultSet results1 = statement1.executeQuery(sb.toString())){
@@ -263,7 +267,8 @@ public class AppData {
         }
     }
 
-    public int insertEmployees(Employee newEmployee) {
+    // -- Method to insert employees in the employees table. Returns the number of rows modified --
+    public int insertEmployee(Employee newEmployee) {
         sb = new StringBuilder(INSERT_EMPLOYEES);
         sb.append("'");
         sb.append(newEmployee.getBatch_uid());
@@ -297,7 +302,6 @@ public class AppData {
         sb.append(newEmployee.getNational_id());
         sb.append("'");
         sb.append(")");
-        System.out.println(sb.toString());
         try{
             Connection db = connect();
             Statement statement1 = db.createStatement();
@@ -318,6 +322,7 @@ public class AppData {
         }
     }
 
+    // -- Method to update the employees table --
     public int updateEmployee(Employee employee, String newBatchUid, String newEmpId, String newFirstName, String newLastName,
                                String newEmail, Double newSalary, Date newCondate, String newNatId) {
         sb = new StringBuilder(UPDATE_EMPLOYEES);
@@ -367,7 +372,6 @@ public class AppData {
         sb.append("'");
         sb.append(employee.getPk1());
         sb.append("'");
-        System.out.println(sb.toString());
         try{
             Connection db = connect();
             Statement statement1 = db.createStatement();
@@ -386,9 +390,9 @@ public class AppData {
             alert.showAndWait();
             return 0;
         }
-
     }
 
+    // -- Method to deleted from the employees table --
     public void deleteEmployee(Employee employee) {
         sb = new StringBuilder(DELETE_EMPLOYEES);
         sb.append(employee.getPk1());
@@ -411,6 +415,7 @@ public class AppData {
         }
     }
 
+    // -- Method to search for all the employees --
     public List<Employee> queryEmployee() throws SQLException {
 
         sb = new StringBuilder(QUERY_EMPLOYEES);
@@ -441,6 +446,7 @@ public class AppData {
         }
     }
 
+    // -- Method overload. Method to query the employees table using the PK1 --
     public Employee queryEmployee(int pk1) throws SQLException {
 
         sb = new StringBuilder(QUERY_EMPLOYEES);
@@ -473,6 +479,7 @@ public class AppData {
             }
         }
 
+    // -- Method overload. Method to query the employees table using a 'WHERE' clause for all possible columns --
     public List<Employee> queryEmployee(String batchUidCheck, String empIdCheck, String firstCheck, String lastCheck, String emailCheck,
                                               String salaryCheck, String conDateCheck,
                                               String natIdCheck) throws  SQLException{
@@ -572,7 +579,6 @@ public class AppData {
             sb.append("'");
         }
 
-        System.out.println(sb.toString());
         try (Connection db = connect();
              Statement statement1 = db.createStatement();
              ResultSet results1 = statement1.executeQuery(sb.toString())){
@@ -600,6 +606,7 @@ public class AppData {
         }
     }
 
+    // -- Query the campaigns table using the PK1 --
     public Campaign queryCampaign(int pk1) {
         sb = new StringBuilder(QUERY_CAMPAIGNS);
         sb.append(" WHERE ");
@@ -631,6 +638,7 @@ public class AppData {
         }
     }
 
+    // -- Method to query the shifts table using the PK1 --
     public Shift queryShift(int pk1) {
         sb = new StringBuilder(QUERY_SHIFTS);
         sb.append(" WHERE ");
@@ -657,10 +665,12 @@ public class AppData {
         }
     }
 
+    // -- Method to close the connection to the DB --
     public static void closeConnection(Connection conn) throws SQLException {
         conn.close();
     }
 
+    // -- Method to change scenes. Receives the current scene and the location of the new FXML --
     public static void sceneChange(Scene currentScene, String newFXML) throws IOException {
         Window currentWindow = currentScene.getWindow();
         Stage currentStage = (Stage) currentWindow;

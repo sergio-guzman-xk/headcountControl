@@ -1,5 +1,6 @@
 package sample;
 
+// -- Modeled after the employees_campaigns table --
 public class SummarizeData {
 
     private String employee_id;

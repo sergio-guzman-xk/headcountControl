@@ -3,6 +3,7 @@ package sample;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+// -- Modeled after the employees table --
 public class Employee {
 
     private int pk1;

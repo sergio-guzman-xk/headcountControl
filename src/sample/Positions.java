@@ -1,5 +1,6 @@
 package sample;
 
+// -- Modeled after the positions table --
 public class Positions {
 
     private int pk1;
