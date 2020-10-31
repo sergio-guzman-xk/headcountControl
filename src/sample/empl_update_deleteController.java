@@ -200,7 +200,7 @@ public class empl_update_deleteController {
                     }
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setHeaderText(e.getMessage());
+                    alert.setHeaderText("ERROR: Date format must be yyyy-mm-dd. " + e.getMessage());
                     alert.showAndWait();
                 }
             } catch (Exception e){
