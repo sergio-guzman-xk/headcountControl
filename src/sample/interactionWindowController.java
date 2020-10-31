@@ -17,7 +17,7 @@ public class interactionWindowController {
 
     public void employeeChangeRequest () throws IOException {
         System.out.println("Employee Button was pressed. Do something");
-        sample.Controller.sceneChange(interactionWindowDiag.getScene(), "empl_update_delete.fxml");
+        sample.AppData.sceneChange(interactionWindowDiag.getScene(), "empl_update_delete.fxml");
     }
 
 

@@ -48,11 +48,11 @@
                                 </rowConstraints>
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#employeePaneSearch" prefWidth="55.0" text="Search" />
-                                    <Button mnemonicParsing="false" prefWidth="55.0" text="Update" GridPane.columnIndex="2" />
-                                    <Button mnemonicParsing="false" prefWidth="55.0" text="Exit" GridPane.columnIndex="5" />
-                                    <Button mnemonicParsing="false" prefWidth="55.0" text="Delete" GridPane.columnIndex="3" />
-                                    <Button mnemonicParsing="false" prefWidth="55.0" text="Create" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" prefWidth="55.0" text="Reset" GridPane.columnIndex="4" />
+                                    <Button mnemonicParsing="false" onAction="#employeePaneUpdate" prefWidth="55.0" text="Update" GridPane.columnIndex="2" />
+                                    <Button fx:id="empExitBtn" mnemonicParsing="false" onAction="#empExitHandler" prefWidth="55.0" text="Exit" GridPane.columnIndex="5" />
+                                    <Button mnemonicParsing="false" onAction="#employeePaneDelete" prefWidth="55.0" text="Delete" GridPane.columnIndex="3" />
+                                    <Button mnemonicParsing="false" onAction="#employeePaneCreate" prefWidth="55.0" text="Create" GridPane.columnIndex="1" />
+                                    <Button mnemonicParsing="false" onAction="#employeePaneReset" prefWidth="55.0" text="Reset" GridPane.columnIndex="4" />
                                  </children>
                               </GridPane>
                            </bottom>
@@ -78,7 +78,7 @@
                                     <TextField fx:id="showEmpBatchUid" GridPane.columnIndex="1" />
                                     <TextField fx:id="showEmpFirstN" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <TextField fx:id="showEmpEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <TextField fx:id="showEmpConDate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <TextField fx:id="showEmpConDate" promptText="yyyy-mm-dd" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <Label alignment="CENTER" prefHeight="75.0" prefWidth="158.0" text="Employee ID" GridPane.columnIndex="2" />
                                     <Label alignment="CENTER" prefHeight="75.0" prefWidth="158.0" text="Last Name" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                     <Label alignment="CENTER" prefHeight="75.0" prefWidth="158.0" text="Salary" GridPane.columnIndex="2" GridPane.rowIndex="2" />

@@ -1,5 +1,13 @@
 package sample;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +82,13 @@ public class AppData {
     private static final String QUERY_EMPLOYEES = "SELECT * FROM " + TABLE_EMPLOYEES;
     private static final String QUERY_CAMPAIGNS = "SELECT * FROM " + TABLE_CAMPAIGNS;
     private static final String QUERY_SHIFTS = "SELECT * FROM " + TABLE_SHIFTS;
-//    private static final String
+    private static final String INSERT_EMPLOYEES = "INSERT INTO " + TABLE_EMPLOYEES + "(" + COLUMN_EMPLOYEES_BATCH_UID +
+            ", " + COLUMN_EMPLOYEES_EMPLOYEE_ID + ", " + COLUMN_EMPLOYEES_FIRST_NAME + ", " + COLUMN_EMPLOYEES_LAST_NAME +
+            ", " + COLUMN_EMPLOYEES_EMAIL + ", " + COLUMN_EMPLOYEES_SALARY + ", " + COLUMN_EMPLOYEES_CONTRACT_DATE + ", "
+            + COLUMN_EMPLOYEES_NATIONAL_ID + ") VALUES (";
+    private static final String UPDATE_EMPLOYEES = "UPDATE " + TABLE_EMPLOYEES + " SET ";
+    private static final String DELETE_EMPLOYEES = "DELETE FROM " + TABLE_EMPLOYEES + " WHERE " + COLUMN_EMPLOYEES_PK1 +
+            " = '";
 
     StringBuilder sb = new StringBuilder();
     private Connection conn;
@@ -92,7 +106,7 @@ public class AppData {
 
     public List<SummarizeData> querySummarize() throws  SQLException{
 
-        StringBuilder sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
+        sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
         try (Connection db = connect();
             Statement statement1 = db.createStatement();
             ResultSet results1 = statement1.executeQuery(sb.toString())){
@@ -125,7 +139,7 @@ public class AppData {
                                                String campNameCheck, String campIdCheck,
                                                String shiftCheck) throws  SQLException{
 
-        StringBuilder sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
+        sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
         boolean preCondition = false;
         sb.append(" WHERE ");
         if (!empCheck.isEmpty()) {
@@ -249,9 +263,157 @@ public class AppData {
         }
     }
 
+    public int insertEmployees(Employee newEmployee) {
+        sb = new StringBuilder(INSERT_EMPLOYEES);
+        sb.append("'");
+        sb.append(newEmployee.getBatch_uid());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newEmployee.getEmployee_id());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newEmployee.getFirst_name());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newEmployee.getLast_name());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newEmployee.getEmail());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(String.format("%.0f", newEmployee.getSalary()));
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newEmployee.getContract_date());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newEmployee.getNational_id());
+        sb.append("'");
+        sb.append(")");
+        System.out.println(sb.toString());
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int results = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item added successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record created");
+            alert.showAndWait();
+            return results;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    public int updateEmployee(Employee employee, String newBatchUid, String newEmpId, String newFirstName, String newLastName,
+                               String newEmail, Double newSalary, Date newCondate, String newNatId) {
+        sb = new StringBuilder(UPDATE_EMPLOYEES);
+        sb.append(COLUMN_EMPLOYEES_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newBatchUid);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_EMPLOYEE_ID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newEmpId);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_FIRST_NAME);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newFirstName);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_LAST_NAME);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newLastName);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_EMAIL);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newEmail);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_SALARY);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(String.format("%.0f", newSalary));
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_CONTRACT_DATE);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newCondate);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_NATIONAL_ID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newNatId);
+        sb.append("'");
+        sb.append(" WHERE ");
+        sb.append(COLUMN_EMPLOYEES_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(employee.getPk1());
+        sb.append("'");
+        System.out.println(sb.toString());
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int result = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item updated successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record Updated");
+            alert.showAndWait();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+
+    }
+
+    public void deleteEmployee(Employee employee) {
+        sb = new StringBuilder(DELETE_EMPLOYEES);
+        sb.append(employee.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item deleted successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record deleted");
+            alert.showAndWait();
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     public List<Employee> queryEmployee() throws SQLException {
 
-        StringBuilder sb = new StringBuilder(QUERY_EMPLOYEES);
+        sb = new StringBuilder(QUERY_EMPLOYEES);
         try (Connection db = connect();
             Statement statement1 = db.createStatement();
             ResultSet results1 = statement1.executeQuery(sb.toString())){
@@ -281,7 +443,7 @@ public class AppData {
 
     public Employee queryEmployee(int pk1) throws SQLException {
 
-        StringBuilder sb = new StringBuilder(QUERY_EMPLOYEES);
+        sb = new StringBuilder(QUERY_EMPLOYEES);
         sb.append(" WHERE ");
         sb.append(COLUMN_EMPLOYEES_PK1);
         sb.append(" = ");
@@ -315,7 +477,7 @@ public class AppData {
                                               String salaryCheck, String conDateCheck,
                                               String natIdCheck) throws  SQLException{
 
-        StringBuilder sb = new StringBuilder(QUERY_EMPLOYEES);
+        sb = new StringBuilder(QUERY_EMPLOYEES);
         boolean preCondition = false;
         sb.append(" WHERE ");
         if (!batchUidCheck.isEmpty()) {
@@ -439,7 +601,7 @@ public class AppData {
     }
 
     public Campaign queryCampaign(int pk1) {
-        StringBuilder sb = new StringBuilder(QUERY_CAMPAIGNS);
+        sb = new StringBuilder(QUERY_CAMPAIGNS);
         sb.append(" WHERE ");
         sb.append(COLUMN_CAMPAIGNS_PK1);
         sb.append(" = ");
@@ -470,7 +632,7 @@ public class AppData {
     }
 
     public Shift queryShift(int pk1) {
-        StringBuilder sb = new StringBuilder(QUERY_SHIFTS);
+        sb = new StringBuilder(QUERY_SHIFTS);
         sb.append(" WHERE ");
         sb.append(COLUMN_SHIFTS_PK1);
         sb.append(" = ");
@@ -495,20 +657,20 @@ public class AppData {
         }
     }
 
-    public void insertStatement (String statement) throws SQLException {
-        try{
-            Connection db = connect();
-            Statement statement1 = db.createStatement();
-            statement1.executeUpdate(statement);
-            closeConnection(db);
-            System.out.println("Item added successfully");
-        } catch (SQLException e) {
-            System.out.println("ERROR while trying to insert: " + e.getMessage());
-        }
-    }
-
     public static void closeConnection(Connection conn) throws SQLException {
         conn.close();
+    }
+
+    public static void sceneChange(Scene currentScene, String newFXML) throws IOException {
+        Window currentWindow = currentScene.getWindow();
+        Stage currentStage = (Stage) currentWindow;
+        currentStage.hide();
+        Parent root = FXMLLoader.load(Controller.class.getResource(newFXML));
+        Stage newStage = new Stage();
+        Scene newScene = new Scene(root);
+        newStage.setScene(newScene);
+        newStage.show();
+
     }
 
 }

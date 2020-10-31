@@ -169,19 +169,7 @@ public class Controller {
 //        newStage.setScene(newScene);
 //        currentStage.hide();
 //        newStage.show();
-        sceneChange(mainWindow.getScene(), "interactionWindow.fxml");
-    }
-
-    public static void sceneChange(Scene currentScene, String newFXML) throws IOException {
-        Window currentWindow = currentScene.getWindow();
-        Stage currentStage = (Stage) currentWindow;
-        currentStage.hide();
-        Parent root = FXMLLoader.load(Controller.class.getResource(newFXML));
-        Stage newStage = new Stage();
-        Scene newScene = new Scene(root);
-        newStage.setScene(newScene);
-        newStage.show();
-
+        AppData.sceneChange(mainWindow.getScene(), "interactionWindow.fxml");
     }
 
     public void handleExit() {
