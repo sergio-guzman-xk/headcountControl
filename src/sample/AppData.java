@@ -87,8 +87,15 @@ public class AppData {
             ", " + COLUMN_EMPLOYEES_EMPLOYEE_ID + ", " + COLUMN_EMPLOYEES_FIRST_NAME + ", " + COLUMN_EMPLOYEES_LAST_NAME +
             ", " + COLUMN_EMPLOYEES_EMAIL + ", " + COLUMN_EMPLOYEES_SALARY + ", " + COLUMN_EMPLOYEES_CONTRACT_DATE + ", "
             + COLUMN_EMPLOYEES_NATIONAL_ID + ") VALUES (";
+    private static final String INSERT_CAMPAIGNS = "INSERT INTO " + TABLE_CAMPAIGNS + "(" + COLUMN_CAMPAIGNS_BATCH_UID +
+            ", " + COLUMN_CAMPAIGNS_CAMP_NAME + ", " + COLUMN_CAMPAIGNS_CAMPAIGN_ID + ", " + COLUMN_CAMPAIGNS_CONTRACT_DATE +
+            ", " + COLUMN_CAMPAIGNS_RENEW_DATE + ", " + COLUMN_CAMPAIGNS_HEADCOUNT_REQ + ", " + COLUMN_CAMPAIGNS_REVENUE + ", "
+            + COLUMN_CAMPAIGNS_PRIORITY + ") VALUES (";
     private static final String UPDATE_EMPLOYEES = "UPDATE " + TABLE_EMPLOYEES + " SET ";
+    private static final String UPDATE_CAMPAIGNS = "UPDATE " + TABLE_CAMPAIGNS + " SET ";
     private static final String DELETE_EMPLOYEES = "DELETE FROM " + TABLE_EMPLOYEES + " WHERE " + COLUMN_EMPLOYEES_PK1 +
+            " = '";
+    private static final String DELETE_CAMPAIGNS = "DELETE FROM " + TABLE_CAMPAIGNS + " WHERE " + COLUMN_CAMPAIGNS_PK1 +
             " = '";
 
     StringBuilder sb = new StringBuilder();
@@ -606,6 +613,35 @@ public class AppData {
         }
     }
 
+    public List<Campaign> queryCampaign() {
+        sb = new StringBuilder(QUERY_CAMPAIGNS);
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Campaign> campaignList = new ArrayList<>();
+            while (results1.next()) {
+                Campaign campaign = new Campaign();
+                campaign.setPk1(results1.getInt(COLUMN_CAMPAIGNS_PK1));
+                campaign.setBatch_uid(results1.getString(COLUMN_CAMPAIGNS_BATCH_UID));
+                campaign.setName(results1.getString(COLUMN_CAMPAIGNS_CAMP_NAME));
+                campaign.setCampaign_id(results1.getString(COLUMN_CAMPAIGNS_CAMPAIGN_ID));
+                campaign.setContract_date(results1.getDate(COLUMN_CAMPAIGNS_CONTRACT_DATE));
+                campaign.setRenew_date(results1.getDate(COLUMN_CAMPAIGNS_RENEW_DATE));
+                campaign.setHeadcount_req(results1.getDouble(COLUMN_CAMPAIGNS_HEADCOUNT_REQ));
+                campaign.setRevenue(results1.getDouble(COLUMN_CAMPAIGNS_REVENUE));
+                campaign.setPriority(results1.getString(COLUMN_CAMPAIGNS_PRIORITY));
+
+                campaignList.add(campaign);
+            }
+            closeConnection(db);
+            return campaignList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
     // -- Query the campaigns table using the PK1 --
     public Campaign queryCampaign(int pk1) {
         sb = new StringBuilder(QUERY_CAMPAIGNS);
@@ -635,6 +671,280 @@ public class AppData {
         } catch (SQLException e) {
             System.out.println("ERROR while trying to query: " + e.getMessage());
             return null;
+        }
+    }
+
+    public List<Campaign> queryCampaign(String batchUidCheck, String nameCheck, String campIdCheck, String conDateCheck,
+                                        String renDateCheck, String headcountCheck, String revenueCheck,
+                                        String priorityCheck) throws  SQLException{
+
+        sb = new StringBuilder(QUERY_CAMPAIGNS);
+        boolean preCondition = false;
+        sb.append(" WHERE ");
+        if (!batchUidCheck.isEmpty()) {
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(batchUidCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!nameCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_CAMP_NAME);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(nameCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!campIdCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_CAMPAIGN_ID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(campIdCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!conDateCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_CONTRACT_DATE);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(conDateCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!renDateCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_RENEW_DATE);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(renDateCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!headcountCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_HEADCOUNT_REQ);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(headcountCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!revenueCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_REVENUE);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(revenueCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!priorityCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_PRIORITY);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(priorityCheck);
+            sb.append("'");
+        }
+
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Campaign> campaignList = new ArrayList<>();
+            while (results1.next()) {
+                Campaign campaign = new Campaign();
+                campaign.setPk1(results1.getInt(COLUMN_CAMPAIGNS_PK1));
+                campaign.setBatch_uid(results1.getString(COLUMN_CAMPAIGNS_BATCH_UID));
+                campaign.setName(results1.getString(COLUMN_CAMPAIGNS_CAMP_NAME));
+                campaign.setCampaign_id(results1.getString(COLUMN_CAMPAIGNS_CAMPAIGN_ID));
+                campaign.setContract_date(results1.getDate(COLUMN_CAMPAIGNS_CONTRACT_DATE));
+                campaign.setRenew_date(results1.getDate(COLUMN_CAMPAIGNS_RENEW_DATE));
+                campaign.setHeadcount_req(results1.getDouble(COLUMN_CAMPAIGNS_HEADCOUNT_REQ));
+                campaign.setRevenue(results1.getDouble(COLUMN_CAMPAIGNS_REVENUE));
+                campaign.setPriority(results1.getString(COLUMN_CAMPAIGNS_PRIORITY));
+
+                campaignList.add(campaign);
+            }
+            closeConnection(db);
+            return campaignList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // -- Method to insert employees in the employees table. Returns the number of rows modified --
+    public int insertCampaign(Campaign newCampaign) {
+        sb = new StringBuilder(INSERT_CAMPAIGNS);
+        sb.append("'");
+        sb.append(newCampaign.getBatch_uid());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newCampaign.getName());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newCampaign.getCampaign_id());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newCampaign.getContract_date());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newCampaign.getRenew_date());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(String.format("%.0f", newCampaign.getHeadcount_req()));
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(String.format("%.0f",newCampaign.getRevenue()));
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newCampaign.getPriority());
+        sb.append("'");
+        sb.append(")");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int results = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item added successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record created");
+            alert.showAndWait();
+            return results;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    // -- Method to update the employees table --
+    public int updateCampaign(Campaign campaign, String newBatchUid, String newName, String newCampId, Date newConDate,
+                              Date newRenDate, Double newHeadReq, Double newRevenue, String newPriority) {
+        sb = new StringBuilder(UPDATE_CAMPAIGNS);
+        sb.append(COLUMN_CAMPAIGNS_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newBatchUid);
+        sb.append("', ");
+        sb.append(COLUMN_CAMPAIGNS_CAMP_NAME);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newName);
+        sb.append("', ");
+        sb.append(COLUMN_CAMPAIGNS_CAMPAIGN_ID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newCampId);
+        sb.append("', ");
+        sb.append(COLUMN_CAMPAIGNS_CONTRACT_DATE);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newConDate);
+        sb.append("', ");
+        sb.append(COLUMN_CAMPAIGNS_RENEW_DATE);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newRenDate);
+        sb.append("', ");
+        sb.append(COLUMN_CAMPAIGNS_HEADCOUNT_REQ);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(String.format("%.0f", newHeadReq));
+        sb.append("', ");
+        sb.append(COLUMN_CAMPAIGNS_REVENUE);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(String.format("%.0f", newRevenue));
+        sb.append("', ");
+        sb.append(COLUMN_CAMPAIGNS_PRIORITY);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newPriority);
+        sb.append("'");
+        sb.append(" WHERE ");
+        sb.append(COLUMN_CAMPAIGNS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(campaign.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int result = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item updated successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record Updated");
+            alert.showAndWait();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    // -- Method to deleted from the employees table --
+    public void deleteCampaign(Campaign campaign) {
+        sb = new StringBuilder(DELETE_CAMPAIGNS);
+        sb.append(campaign.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item deleted successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record deleted");
+            alert.showAndWait();
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
         }
     }
 

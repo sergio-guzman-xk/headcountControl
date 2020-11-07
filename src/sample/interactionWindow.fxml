@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
 <DialogPane fx:id="interactionWindowDiag" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.interactionWindowController">
    <content>
       <BorderPane>
@@ -33,27 +32,27 @@
                         <Insets bottom="10.0" left="5.0" right="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="interCampBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Campaigns" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                  <Button fx:id="interCampBtn" mnemonicParsing="false" onAction="#campaignChangeRequest" prefHeight="107.0" prefWidth="293.0" text="Campaigns" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets bottom="10.0" left="5.0" right="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="interShiftBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Shifts" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                  <Button fx:id="interShiftBtn" mnemonicParsing="false" onAction="#shiftChangeRequest" prefHeight="107.0" prefWidth="293.0" text="Shifts" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets bottom="10.0" left="5.0" right="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="interAssigBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Assignments" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                  <Button fx:id="interAssigBtn" mnemonicParsing="false" onAction="#assignmentChangeRequest" prefHeight="107.0" prefWidth="293.0" text="Assignments" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets bottom="10.0" left="5.0" right="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="interCancelBtn" cancelButton="true" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Cancel" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                  <Button fx:id="interCancelBtn" cancelButton="true" mnemonicParsing="false" onAction="#cancelChangeRequest" prefHeight="107.0" prefWidth="293.0" text="Cancel" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets bottom="10.0" left="5.0" right="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="interPosBtn" mnemonicParsing="false" prefHeight="107.0" prefWidth="293.0" text="Position" GridPane.columnIndex="4">
+                  <Button fx:id="interPosBtn" mnemonicParsing="false" onAction="#positionChangeRequest" prefHeight="107.0" prefWidth="293.0" text="Position" GridPane.columnIndex="4">
                      <GridPane.margin>
                         <Insets bottom="10.0" left="5.0" right="5.0" />
                      </GridPane.margin>

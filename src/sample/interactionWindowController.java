@@ -18,11 +18,29 @@ public class interactionWindowController {
     private DialogPane interactionWindowDiag;
 
     // -- Employee Button. Displays the employees window UI --
-    public void employeeChangeRequest () throws IOException {
+    public void employeeChangeRequest() throws IOException {
         System.out.println("Employee Button was pressed. Do something");
         sample.AppData.sceneChange(interactionWindowDiag.getScene(), "empl_update_delete.fxml");
     }
 
+    public void campaignChangeRequest() throws IOException {
+        sample.AppData.sceneChange(interactionWindowDiag.getScene(), "camp_update_delete.fxml");
+    }
 
+    public void assignmentChangeRequest() throws IOException {
+        sample.AppData.sceneChange(interactionWindowDiag.getScene(), "assign_update_delete.fxml");
+    }
+
+    public void shiftChangeRequest() throws IOException {
+        sample.AppData.sceneChange(interactionWindowDiag.getScene(), "shifts_update_delete.fxml");
+    }
+
+    public void positionChangeRequest() throws IOException {
+        sample.AppData.sceneChange(interactionWindowDiag.getScene(), "pos_update_delete.fxml");
+    }
+
+    public void cancelChangeRequest() throws IOException {
+        sample.AppData.sceneChange(interactionWindowDiag.getScene(), "mainWindow.fxml");
+    }
 
 }
