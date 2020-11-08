@@ -50,12 +50,12 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Button mnemonicParsing="false" onAction="#campaignPaneSearch" prefWidth="55.0" text="Search" />
-                                    <Button mnemonicParsing="false" onAction="#campaignPaneUpdate" prefWidth="55.0" text="Update" GridPane.columnIndex="2" />
-                                    <Button fx:id="empExitBtn" mnemonicParsing="false" onAction="#campExitHandler" prefWidth="55.0" text="Exit" GridPane.columnIndex="5" />
-                                    <Button mnemonicParsing="false" onAction="#campaignPaneDelete" prefWidth="55.0" text="Delete" GridPane.columnIndex="3" />
-                                    <Button mnemonicParsing="false" onAction="#campaignPaneCreate" prefWidth="55.0" text="Create" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" onAction="#campaignPaneReset" prefWidth="55.0" text="Reset" GridPane.columnIndex="4" />
+                                    <Button mnemonicParsing="false" onAction="#posPaneSearch" prefWidth="55.0" text="Search" />
+                                    <Button mnemonicParsing="false" onAction="#posPaneUpdate" prefWidth="55.0" text="Update" GridPane.columnIndex="2" />
+                                    <Button fx:id="empExitBtn" mnemonicParsing="false" onAction="#posExitHandler" prefWidth="55.0" text="Exit" GridPane.columnIndex="5" />
+                                    <Button mnemonicParsing="false" onAction="#posPaneDelete" prefWidth="55.0" text="Delete" GridPane.columnIndex="3" />
+                                    <Button mnemonicParsing="false" onAction="#posPaneCreate" prefWidth="55.0" text="Create" GridPane.columnIndex="1" />
+                                    <Button mnemonicParsing="false" onAction="#posPaneReset" prefWidth="55.0" text="Reset" GridPane.columnIndex="4" />
                                  </children>
                               </GridPane>
                            </bottom>
@@ -115,9 +115,9 @@
                               <ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
                            </right>
                            <center>
-                              <TableView fx:id="showShiftsTable" onMouseClicked="#positionSelected" prefHeight="269.0" prefWidth="624.0" BorderPane.alignment="CENTER">
+                              <TableView fx:id="showPosTable" onMouseClicked="#positionSelected" prefHeight="269.0" prefWidth="624.0" BorderPane.alignment="CENTER">
                                  <columns>
-                                    <TableColumn fx:id="colPosiitonsBatchUid" prefWidth="99.0" text="Batch UID" />
+                                    <TableColumn fx:id="colPositionsBatchUid" prefWidth="99.0" text="Batch UID" />
                                     <TableColumn fx:id="colPositionsTitle" prefWidth="90.0" text="Tiitle" />
                                     <TableColumn fx:id="colPositionDescription" prefWidth="75.0" text="Description" />
                                  </columns>

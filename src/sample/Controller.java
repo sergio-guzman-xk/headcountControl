@@ -3,18 +3,10 @@ package sample;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 // -- This class is the controller for the primary window --
@@ -34,6 +26,9 @@ public class Controller {
     private TableColumn<SummarizeData, String> colShift;
     @FXML
     private TableColumn<SummarizeData, String> colPos;
+    @FXML
+    private TableColumn<SummarizeData, String> colStartDate;
+
     @FXML
     private TextField employeeIdTxtField;
     @FXML
@@ -86,12 +81,10 @@ public class Controller {
     private TextField showShiftDesc;
     @FXML
     private TextField showShiftSchedule;
+
     @FXML
     private VBox mainWindow;
-    @FXML
-    private DialogPane interactionWindowDiag;
-    @FXML
-    private AnchorPane employeeChangePane;
+
 
     AppData newData = new AppData();
 
@@ -131,7 +124,7 @@ public class Controller {
                 colCamp.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCampaign_name()));
                 colShift.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getShift()));
                 colPos.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPosition()));
-
+                colStartDate.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getStartDate())));
             }
         }
     }
@@ -167,7 +160,6 @@ public class Controller {
             showShiftDesc.setText(shift.getDescription());
             showShiftSchedule.setText(shift.getTime());
         }
-
     }
 
     // -- Delete/Update/create button is clicked. Calls a scene change --

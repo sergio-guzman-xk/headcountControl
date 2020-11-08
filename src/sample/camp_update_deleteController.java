@@ -74,7 +74,7 @@ public class camp_update_deleteController {
         campConDateData = showCampConDate.getText().trim();
         campRenDateData = showCampRenDate.getText().trim();
 
-        // -- Define a list of Employee objects --
+        // -- Define a list of Campaign objects --
         List<Campaign> campaigns;
         // -- Checks if there are any search parameters --
         if (campBatchUidData.isEmpty() & campNameData.isEmpty() & campCampIdData.isEmpty() & campConDateData.isEmpty()
@@ -124,7 +124,7 @@ public class camp_update_deleteController {
 
     // -- Create Button --
     public void campaignPaneCreate() {
-        // -- Creates and empty employee object --
+        // -- Creates and empty campaign object --
         Campaign newCampaign = new Campaign();
         campBatchUidData = showCampBatchUid.getText().trim();
         campCampIdData = showCampCampId.getText().trim();
@@ -144,7 +144,7 @@ public class camp_update_deleteController {
             alert.showAndWait();
         } else {
             try {
-                // -- Use set methods to set the the values of the employee object created before --
+                // -- Use set methods to set the the values of the campaign object created before --
                 newCampaign.setBatch_uid(campBatchUidData);
                 newCampaign.setName(campNameData);
                 newCampaign.setCampaign_id(campCampIdData);
@@ -153,7 +153,7 @@ public class camp_update_deleteController {
                 newCampaign.setHeadcount_req(Double.parseDouble(campHeadReqData));
                 newCampaign.setRevenue(Double.parseDouble(campRevenueData));
                 newCampaign.setPriority(campPriorData);
-                // -- Run the insertEmployee() to create the user in the DB. Assign the returned value to success --
+                // -- Run the insertCampaign() to create the campaign in the DB. Assign the returned value to success --
                 int success = newData.insertCampaign(newCampaign);
                 // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
                 // -- If the above was a success then refresh the tableview to show the new data --
@@ -174,7 +174,7 @@ public class camp_update_deleteController {
         Campaign selectedCampaign = showCampTable.getSelectionModel().getSelectedItem();
         if(selectedCampaign != null) {
             try {
-                // -- checks if the Salary is a valid double --
+                // -- checks if the double values are double --
                 Double newCampHeadReq = Double.parseDouble(showCampHeadReq.getText());
                 Double newCampRev = Double.parseDouble(showCampRevenue.getText());
                 try {
@@ -224,7 +224,7 @@ public class camp_update_deleteController {
             alert.setHeaderText("Are you sure? Press OK to confirm or CANCEL to abort.");
             Optional<ButtonType> result = alert.showAndWait();
             if(result.isPresent() && (result.get() == ButtonType.OK)) {
-                // -- Calls deleteEmployee() and then resets all the fields in the UI and refreshes the tableview --
+                // -- Calls deleteCampaign() and then resets all the fields in the UI and refreshes the tableview --
                 newData.deleteCampaign(selectedCampaign);
                 campaignPaneReset();
                 campaignPaneSearch();

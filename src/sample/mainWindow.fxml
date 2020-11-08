@@ -97,6 +97,9 @@
                                        <children>
                                           <Button fx:id="updateBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#interactionRequest" prefHeight="37.0" text="Update/Delete/Create" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
                                        </children>
+                                       <columnConstraints>
+                                          <ColumnConstraints />
+                                       </columnConstraints>
                                     </GridPane>
                                  </children>
                               </GridPane>
@@ -306,6 +309,7 @@
                                           <TableColumn fx:id="colCamp" prefWidth="63.0" text="Campaign" />
                                           <TableColumn fx:id="colShift" minWidth="1.0" prefWidth="48.0" text="Shift" />
                                           <TableColumn fx:id="colPos" prefWidth="75.0" text="Position" />
+                                          <TableColumn fx:id="colStartDate" prefWidth="75.0" text="Start Date" />
                                       </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

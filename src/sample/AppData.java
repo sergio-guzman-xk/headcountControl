@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -62,14 +61,17 @@ public class AppData {
     private static final String COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE = "start_date";
     private static final String COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1 = "positions_pk1";
     // -- All sql statements are defined as variables --
-    private static final String QUERY_SUMMARIZE_DATA_RETRIEVE = "SELECT " + TABLE_EMPLOYEES_CAMPAIGNS  + "."
+
+    private static final String QUERY_SUMMARIZE_DATA_RETRIEVE = "SELECT " + TABLE_EMPLOYEES_CAMPAIGNS + "." +
+            COLUMN_EMPLOYEES_CAMPAIGNS_PK1 + ", " + TABLE_EMPLOYEES_CAMPAIGNS + "." +
+            COLUMN_EMPLOYEES_CAMPAIGNS_BATCH_UID + ", "+ TABLE_EMPLOYEES_CAMPAIGNS  + "."
             + COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1 + ", " + TABLE_EMPLOYEES_CAMPAIGNS  + "." + COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1
             + ", " + TABLE_EMPLOYEES_CAMPAIGNS  + "." + COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1 + ", "
             + TABLE_EMPLOYEES_CAMPAIGNS  + "." + COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1 + ", " +TABLE_EMPLOYEES + "." +
     COLUMN_EMPLOYEES_EMPLOYEE_ID + ", " + TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_FIRST_NAME +
             ", " + TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_LAST_NAME + ", " + TABLE_CAMPAIGNS + "." +
     COLUMN_CAMPAIGNS_CAMP_NAME + ", " + TABLE_SHIFTS + "." + COLUMN_SHIFTS_SCHEDULE + ", " +
-    TABLE_POSITIONS + "." + COLUMN_POSITIONS_TITLE +
+    TABLE_POSITIONS + "." + COLUMN_POSITIONS_TITLE + ", " + TABLE_EMPLOYEES_CAMPAIGNS + "." + COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE +
             " FROM " + TABLE_EMPLOYEES_CAMPAIGNS +
             " JOIN " + TABLE_EMPLOYEES + " ON " + TABLE_EMPLOYEES_CAMPAIGNS + "." + COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1
             + " = " + TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_PK1 +
@@ -79,10 +81,11 @@ public class AppData {
             + " = " + TABLE_SHIFTS + "." + COLUMN_SHIFTS_PK1 +
             " JOIN " + TABLE_POSITIONS + " ON " + TABLE_EMPLOYEES_CAMPAIGNS + "." + COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1
             + " = " + TABLE_POSITIONS + "." + COLUMN_POSITIONS_PK1;
-
     private static final String QUERY_EMPLOYEES = "SELECT * FROM " + TABLE_EMPLOYEES;
     private static final String QUERY_CAMPAIGNS = "SELECT * FROM " + TABLE_CAMPAIGNS;
     private static final String QUERY_SHIFTS = "SELECT * FROM " + TABLE_SHIFTS;
+    private static final String QUERY_POSITIONS = "SELECT * FROM " + TABLE_POSITIONS;
+
     private static final String INSERT_EMPLOYEES = "INSERT INTO " + TABLE_EMPLOYEES + "(" + COLUMN_EMPLOYEES_BATCH_UID +
             ", " + COLUMN_EMPLOYEES_EMPLOYEE_ID + ", " + COLUMN_EMPLOYEES_FIRST_NAME + ", " + COLUMN_EMPLOYEES_LAST_NAME +
             ", " + COLUMN_EMPLOYEES_EMAIL + ", " + COLUMN_EMPLOYEES_SALARY + ", " + COLUMN_EMPLOYEES_CONTRACT_DATE + ", "
@@ -91,11 +94,30 @@ public class AppData {
             ", " + COLUMN_CAMPAIGNS_CAMP_NAME + ", " + COLUMN_CAMPAIGNS_CAMPAIGN_ID + ", " + COLUMN_CAMPAIGNS_CONTRACT_DATE +
             ", " + COLUMN_CAMPAIGNS_RENEW_DATE + ", " + COLUMN_CAMPAIGNS_HEADCOUNT_REQ + ", " + COLUMN_CAMPAIGNS_REVENUE + ", "
             + COLUMN_CAMPAIGNS_PRIORITY + ") VALUES (";
+    private static final String INSERT_SHIFTS = "INSERT INTO " + TABLE_SHIFTS + "(" + COLUMN_SHIFTS_BATCH_UID +
+            ", " + COLUMN_SHIFTS_DESCRIPTION + ", " + COLUMN_SHIFTS_SCHEDULE + ") VALUES (";
+    private static final String INSERT_POSITIONS = "INSERT INTO " + TABLE_POSITIONS + "(" + COLUMN_POSITIONS_BATCH_UID +
+            ", " + COLUMN_POSITIONS_DESCRIPTION + ", " + COLUMN_POSITIONS_TITLE + ") VALUES (";
+    private static final String INSERT_SUMMARIZE = "INSERT INTO " + TABLE_EMPLOYEES_CAMPAIGNS + "(" + COLUMN_EMPLOYEES_CAMPAIGNS_BATCH_UID +
+            ", " + COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1 + ", " + COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1 + ", " +
+            COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1 + ", " + COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE + ", " + COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1 +
+            ") VALUES (";
+
     private static final String UPDATE_EMPLOYEES = "UPDATE " + TABLE_EMPLOYEES + " SET ";
     private static final String UPDATE_CAMPAIGNS = "UPDATE " + TABLE_CAMPAIGNS + " SET ";
+    private static final String UPDATE_SHIFTS= "UPDATE " + TABLE_SHIFTS + " SET ";
+    private static final String UPDATE_POSITIONS= "UPDATE " + TABLE_POSITIONS + " SET ";
+    private static final String UPDATE_SUMMARIZE= "UPDATE " + TABLE_EMPLOYEES_CAMPAIGNS + " SET ";
+
     private static final String DELETE_EMPLOYEES = "DELETE FROM " + TABLE_EMPLOYEES + " WHERE " + COLUMN_EMPLOYEES_PK1 +
             " = '";
     private static final String DELETE_CAMPAIGNS = "DELETE FROM " + TABLE_CAMPAIGNS + " WHERE " + COLUMN_CAMPAIGNS_PK1 +
+            " = '";
+    private static final String DELETE_SHIFTS = "DELETE FROM " + TABLE_SHIFTS + " WHERE " + COLUMN_SHIFTS_PK1 +
+            " = '";
+    private static final String DELETE_POSITIONS = "DELETE FROM " + TABLE_POSITIONS + " WHERE " + COLUMN_POSITIONS_PK1 +
+            " = '";
+    private static final String DELETE_SUMMARIZE = "DELETE FROM " + TABLE_EMPLOYEES_CAMPAIGNS + " WHERE " + COLUMN_EMPLOYEES_CAMPAIGNS_PK1 +
             " = '";
 
     StringBuilder sb = new StringBuilder();
@@ -117,6 +139,7 @@ public class AppData {
     public List<SummarizeData> querySummarize() throws  SQLException{
 
         sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
+        System.out.printf(sb.toString());
         try (Connection db = connect();
             Statement statement1 = db.createStatement();
             ResultSet results1 = statement1.executeQuery(sb.toString())){
@@ -134,6 +157,116 @@ public class AppData {
                 sumData.setCampaign_name(results1.getString(COLUMN_CAMPAIGNS_CAMP_NAME));
                 sumData.setShift(results1.getString(COLUMN_SHIFTS_SCHEDULE));
                 sumData.setPosition(results1.getString(COLUMN_POSITIONS_TITLE));
+                sumData.setPk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_PK1));
+                sumData.setBatch_uid(results1.getString(COLUMN_EMPLOYEES_CAMPAIGNS_BATCH_UID));
+                sumData.setStartDate(results1.getDate(COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE));
+
+                summarizeData.add(sumData);
+            }
+            closeConnection(db);
+            return summarizeData;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+    // -- Method overload for the Assignment window interface --
+    public List<SummarizeData> querySummarize(String batchUidCheck, String assignEmpCheck, String assignCampCheck,
+                                              String assignShiftCheck, String assignPositionCheck,
+                                              String assignStartDateCheck) throws  SQLException{
+
+        sb = new StringBuilder(QUERY_SUMMARIZE_DATA_RETRIEVE);
+        // -- preCondition checks if there is a need of an  "AND" in the "WHERE" clause --
+        boolean preCondition = false;
+        sb.append(" WHERE ");
+        if (!batchUidCheck.isEmpty()) {
+            sb.append(TABLE_EMPLOYEES_CAMPAIGNS + "." + COLUMN_EMPLOYEES_CAMPAIGNS_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(batchUidCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!assignEmpCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES + "." + COLUMN_EMPLOYEES_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(assignEmpCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!assignCampCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_CAMPAIGNS + "." + COLUMN_CAMPAIGNS_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(assignCampCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!assignShiftCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_SHIFTS + "." + COLUMN_SHIFTS_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(assignShiftCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!assignPositionCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_POSITIONS + "." + COLUMN_POSITIONS_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(assignPositionCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!assignStartDateCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_EMPLOYEES_CAMPAIGNS + "." + COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(assignStartDateCheck);
+            sb.append("'");
+        }
+
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<SummarizeData> summarizeData = new ArrayList<>();
+            while (results1.next()) {
+                SummarizeData sumData = new SummarizeData();
+                sumData.setEmployees_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1));
+                sumData.setCampaigns_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1));
+                sumData.setShifts_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1));
+                sumData.setPositions_pk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1));
+                sumData.setEmployee_id(results1.getString(COLUMN_EMPLOYEES_EMPLOYEE_ID));
+                sumData.setFirst_name(results1.getString(COLUMN_EMPLOYEES_FIRST_NAME));
+                sumData.setLast_name(results1.getString(COLUMN_EMPLOYEES_LAST_NAME));
+                sumData.setCampaign_name(results1.getString(COLUMN_CAMPAIGNS_CAMP_NAME));
+                sumData.setShift(results1.getString(COLUMN_SHIFTS_SCHEDULE));
+                sumData.setPosition(results1.getString(COLUMN_POSITIONS_TITLE));
+                sumData.setPk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_PK1));
+                sumData.setBatch_uid(results1.getString(COLUMN_EMPLOYEES_CAMPAIGNS_BATCH_UID));
+                sumData.setStartDate(results1.getDate(COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE));
 
                 summarizeData.add(sumData);
             }
@@ -263,6 +396,9 @@ public class AppData {
                 sumData.setCampaign_name(results1.getString(COLUMN_CAMPAIGNS_CAMP_NAME));
                 sumData.setShift(results1.getString(COLUMN_SHIFTS_SCHEDULE));
                 sumData.setPosition(results1.getString(COLUMN_POSITIONS_TITLE));
+                sumData.setPk1(results1.getInt(COLUMN_EMPLOYEES_CAMPAIGNS_PK1));
+                sumData.setBatch_uid(results1.getString(COLUMN_EMPLOYEES_CAMPAIGNS_BATCH_UID));
+                sumData.setStartDate(results1.getDate(COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE));
 
                 summarizeData.add(sumData);
             }
@@ -271,6 +407,136 @@ public class AppData {
         } catch (SQLException e) {
             System.out.println("ERROR while trying to query: " + e.getMessage());
             return null;
+        }
+    }
+
+    // -- Method to insert campaigns in the campaigns table. Returns the number of rows modified --
+    public int insertSummarize(SummarizeData newAssign) {
+        sb = new StringBuilder(INSERT_SUMMARIZE);
+        sb.append("'");
+        sb.append(newAssign.getBatch_uid());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newAssign.getEmployees_pk1());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newAssign.getCampaigns_pk1());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newAssign.getShifts_pk1());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newAssign.getStartDate());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newAssign.getPositions_pk1());
+        sb.append("'");
+        sb.append(")");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int results = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item added successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record created");
+            alert.showAndWait();
+            return results;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    // -- Method to update the employees table --
+    public int updateSummarize(SummarizeData assignment, String newBatchUid, int newEmpPk1, int newCampPk1,
+                                int newShiftPk1, Date newStartDate, int newPosPk1) {
+        sb = new StringBuilder(UPDATE_SUMMARIZE);
+        sb.append(COLUMN_EMPLOYEES_CAMPAIGNS_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newBatchUid);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_CAMPAIGNS_EMPLOYEES_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newEmpPk1);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_CAMPAIGNS_CAMPAIGNS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newCampPk1);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_CAMPAIGNS_SHIFTS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newShiftPk1);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_CAMPAIGNS_START_DATE);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newStartDate);
+        sb.append("', ");
+        sb.append(COLUMN_EMPLOYEES_CAMPAIGNS_POSITIONS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append((newPosPk1));
+        sb.append("'");
+        sb.append(" WHERE ");
+        sb.append(COLUMN_EMPLOYEES_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(assignment.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int result = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item updated successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record Updated");
+            alert.showAndWait();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    // -- Method to deleted from the employees table --
+    public void deleteSummarize(SummarizeData assign) {
+        sb = new StringBuilder(DELETE_SUMMARIZE);
+        sb.append(assign.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item deleted successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record deleted");
+            alert.showAndWait();
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
         }
     }
 
@@ -486,6 +752,38 @@ public class AppData {
             }
         }
 
+    public Employee queryEmployee(String batchUid) throws SQLException {
+
+        sb = new StringBuilder(QUERY_EMPLOYEES);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_EMPLOYEES_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(batchUid);
+        sb.append("'");
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Employee employee = new Employee();
+            while (results1.next()) {
+                employee.setPk1(results1.getInt(COLUMN_EMPLOYEES_PK1));
+                employee.setBatch_uid(results1.getString(COLUMN_EMPLOYEES_BATCH_UID));
+                employee.setEmployee_id(results1.getString(COLUMN_EMPLOYEES_EMPLOYEE_ID));
+                employee.setFirst_name(results1.getString(COLUMN_EMPLOYEES_FIRST_NAME));
+                employee.setLast_name(results1.getString(COLUMN_EMPLOYEES_LAST_NAME));
+                employee.setEmail(results1.getString(COLUMN_EMPLOYEES_EMAIL));
+                employee.setSalary(results1.getDouble(COLUMN_EMPLOYEES_SALARY));
+                employee.setContract_date(results1.getDate(COLUMN_EMPLOYEES_CONTRACT_DATE));
+                employee.setNational_id(results1.getString(COLUMN_EMPLOYEES_NATIONAL_ID));
+            }
+            closeConnection(db);
+            return employee;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
     // -- Method overload. Method to query the employees table using a 'WHERE' clause for all possible columns --
     public List<Employee> queryEmployee(String batchUidCheck, String empIdCheck, String firstCheck, String lastCheck, String emailCheck,
                                               String salaryCheck, String conDateCheck,
@@ -586,6 +884,7 @@ public class AppData {
             sb.append("'");
         }
 
+        System.out.println(sb.toString());
         try (Connection db = connect();
              Statement statement1 = db.createStatement();
              ResultSet results1 = statement1.executeQuery(sb.toString())){
@@ -613,6 +912,7 @@ public class AppData {
         }
     }
 
+    // -- Queries the campaigns table with not parameters --
     public List<Campaign> queryCampaign() {
         sb = new StringBuilder(QUERY_CAMPAIGNS);
         try (Connection db = connect();
@@ -674,6 +974,38 @@ public class AppData {
         }
     }
 
+    public Campaign queryCampaign(String batchUid) {
+        sb = new StringBuilder(QUERY_CAMPAIGNS);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_CAMPAIGNS_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(batchUid);
+        sb.append("'");
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Campaign campaign = new Campaign();
+            while (results1.next()) {
+                campaign.setPk1(results1.getInt(COLUMN_CAMPAIGNS_PK1));
+                campaign.setBatch_uid(results1.getString(COLUMN_CAMPAIGNS_BATCH_UID));
+                campaign.setName(results1.getString(COLUMN_CAMPAIGNS_CAMP_NAME));
+                campaign.setCampaign_id(results1.getString(COLUMN_CAMPAIGNS_CAMPAIGN_ID));
+                campaign.setContract_date(results1.getDate(COLUMN_CAMPAIGNS_CONTRACT_DATE));
+                campaign.setRenew_date(results1.getDate(COLUMN_CAMPAIGNS_RENEW_DATE));
+                campaign.setHeadcount_req(results1.getDouble(COLUMN_CAMPAIGNS_HEADCOUNT_REQ));
+                campaign.setRevenue(results1.getDouble(COLUMN_CAMPAIGNS_REVENUE));
+                campaign.setPriority(results1.getString(COLUMN_CAMPAIGNS_PRIORITY));
+            }
+            closeConnection(db);
+            return campaign;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // -- Method overload to use parameters in the campaign query --
     public List<Campaign> queryCampaign(String batchUidCheck, String nameCheck, String campIdCheck, String conDateCheck,
                                         String renDateCheck, String headcountCheck, String revenueCheck,
                                         String priorityCheck) throws  SQLException{
@@ -800,7 +1132,7 @@ public class AppData {
         }
     }
 
-    // -- Method to insert employees in the employees table. Returns the number of rows modified --
+    // -- Method to insert campaigns in the campaigns table. Returns the number of rows modified --
     public int insertCampaign(Campaign newCampaign) {
         sb = new StringBuilder(INSERT_CAMPAIGNS);
         sb.append("'");
@@ -855,7 +1187,7 @@ public class AppData {
         }
     }
 
-    // -- Method to update the employees table --
+    // -- Method to update the campaigns table --
     public int updateCampaign(Campaign campaign, String newBatchUid, String newName, String newCampId, Date newConDate,
                               Date newRenDate, Double newHeadReq, Double newRevenue, String newPriority) {
         sb = new StringBuilder(UPDATE_CAMPAIGNS);
@@ -925,7 +1257,7 @@ public class AppData {
         }
     }
 
-    // -- Method to deleted from the employees table --
+    // -- Method to deleted from the campaigns table --
     public void deleteCampaign(Campaign campaign) {
         sb = new StringBuilder(DELETE_CAMPAIGNS);
         sb.append(campaign.getPk1());
@@ -945,6 +1277,32 @@ public class AppData {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(e.getMessage());
             alert.showAndWait();
+        }
+    }
+
+    // -- Method to search for all the shifts --
+    public List<Shift> queryShift() throws SQLException {
+
+        sb = new StringBuilder(QUERY_SHIFTS);
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Shift> shiftList = new ArrayList<>();
+            while (results1.next()) {
+                Shift shift = new Shift();
+                shift.setPk1(results1.getInt(COLUMN_SHIFTS_PK1));
+                shift.setBatch_uid(results1.getString(COLUMN_SHIFTS_BATCH_UID));
+                shift.setDescription(results1.getString(COLUMN_SHIFTS_DESCRIPTION));
+                shift.setTime(results1.getString(COLUMN_SHIFTS_SCHEDULE));
+
+                shiftList.add(shift);
+            }
+            closeConnection(db);
+            return shiftList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
         }
     }
 
@@ -974,6 +1332,434 @@ public class AppData {
             return null;
         }
     }
+
+    public Shift queryShift(String batchUid) {
+        sb = new StringBuilder(QUERY_SHIFTS);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_SHIFTS_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(batchUid);
+        sb.append("'");
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Shift shift = new Shift();
+            while (results1.next()) {
+                shift.setPk1(results1.getInt(COLUMN_SHIFTS_PK1));
+                shift.setBatch_uid(results1.getString(COLUMN_SHIFTS_BATCH_UID));
+                shift.setDescription(results1.getString(COLUMN_SHIFTS_DESCRIPTION));
+                shift.setTime(results1.getString(COLUMN_SHIFTS_SCHEDULE));
+            }
+            closeConnection(db);
+            return shift;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // -- Method overload. Method to query the shifts table using a 'WHERE' clause for all possible columns --
+    public List<Shift> queryShift(String batchUidCheck, String timeCheck, String descriptionCheck) throws  SQLException{
+
+        sb = new StringBuilder(QUERY_SHIFTS);
+        boolean preCondition = false;
+        sb.append(" WHERE ");
+        if (!batchUidCheck.isEmpty()) {
+            sb.append(TABLE_SHIFTS + "." + COLUMN_SHIFTS_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(batchUidCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!descriptionCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_SHIFTS + "." + COLUMN_SHIFTS_DESCRIPTION);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(descriptionCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!timeCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_SHIFTS + "." + COLUMN_SHIFTS_SCHEDULE);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(timeCheck);
+            sb.append("'");
+        }
+
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Shift> shiftList = new ArrayList<>();
+            while (results1.next()) {
+                Shift shift = new Shift();
+                shift.setPk1(results1.getInt(COLUMN_SHIFTS_PK1));
+                shift.setBatch_uid(results1.getString(COLUMN_SHIFTS_BATCH_UID));
+                shift.setDescription(results1.getString(COLUMN_SHIFTS_DESCRIPTION));
+                shift.setTime(results1.getString(COLUMN_SHIFTS_SCHEDULE));
+
+                shiftList.add(shift);
+            }
+            closeConnection(db);
+            return shiftList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // -- Method to insert campaigns in the campaigns table. Returns the number of rows modified --
+    public int insertShift(Shift newShift) {
+        sb = new StringBuilder(INSERT_SHIFTS);
+        sb.append("'");
+        sb.append(newShift.getBatch_uid());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newShift.getDescription());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newShift.getTime());
+        sb.append("'");
+        sb.append(")");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int results = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item added successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record created");
+            alert.showAndWait();
+            return results;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    public int updateShift(Shift shift, String newBatchUid, String newSchedule, String newDescription) {
+        sb = new StringBuilder(UPDATE_SHIFTS);
+        sb.append(COLUMN_SHIFTS_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newBatchUid);
+        sb.append("', ");
+        sb.append(COLUMN_SHIFTS_SCHEDULE);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newSchedule);
+        sb.append("', ");
+        sb.append(COLUMN_SHIFTS_DESCRIPTION);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newDescription);
+        sb.append("'");
+        sb.append(" WHERE ");
+        sb.append(COLUMN_SHIFTS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(shift.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int result = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item updated successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record Updated");
+            alert.showAndWait();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    // -- Method to deleted from the shifts table --
+    public void deleteShift(Shift shift) {
+        sb = new StringBuilder(DELETE_SHIFTS);
+        sb.append(shift.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item deleted successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record deleted");
+            alert.showAndWait();
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    // -- Method to search for all the positions --
+    public List<Positions> queryPosition() throws SQLException {
+
+        sb = new StringBuilder(QUERY_POSITIONS);
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Positions> positionsList = new ArrayList<>();
+            while (results1.next()) {
+                Positions position = new Positions();
+                position.setPk1(results1.getInt(COLUMN_POSITIONS_PK1));
+                position.setBatch_uid(results1.getString(COLUMN_POSITIONS_BATCH_UID));
+                position.setDescription(results1.getString(COLUMN_POSITIONS_DESCRIPTION));
+                position.setTittle(results1.getString(COLUMN_POSITIONS_TITLE));
+
+                positionsList.add(position);
+            }
+            closeConnection(db);
+            return positionsList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // -- Method to query the positions table using the PK1 --
+    public Positions queryPosition(int pk1) {
+        sb = new StringBuilder(QUERY_POSITIONS);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_POSITIONS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(pk1);
+        sb.append("'");
+        try (Connection db = connect();
+            Statement statement1 = db.createStatement();
+            ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Positions position = new Positions();
+            while (results1.next()) {
+                position.setPk1(results1.getInt(COLUMN_POSITIONS_PK1));
+                position.setBatch_uid(results1.getString(COLUMN_POSITIONS_BATCH_UID));
+                position.setDescription(results1.getString(COLUMN_POSITIONS_DESCRIPTION));
+                position.setTittle(results1.getString(COLUMN_POSITIONS_TITLE));
+            }
+            closeConnection(db);
+            return position;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public Positions queryPosition(String batchUid) {
+        sb = new StringBuilder(QUERY_POSITIONS);
+        sb.append(" WHERE ");
+        sb.append(COLUMN_POSITIONS_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(batchUid);
+        sb.append("'");
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+            Positions position = new Positions();
+            while (results1.next()) {
+                position.setPk1(results1.getInt(COLUMN_POSITIONS_PK1));
+                position.setBatch_uid(results1.getString(COLUMN_POSITIONS_BATCH_UID));
+                position.setDescription(results1.getString(COLUMN_POSITIONS_DESCRIPTION));
+                position.setTittle(results1.getString(COLUMN_POSITIONS_TITLE));
+            }
+            closeConnection(db);
+            return position;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // -- Method overload. Method to query the positions table using a 'WHERE' clause for all possible columns --
+    public List<Positions> queryPosition(String batchUidCheck, String titleCheck, String descriptionCheck) throws  SQLException{
+
+        sb = new StringBuilder(QUERY_POSITIONS);
+        boolean preCondition = false;
+        sb.append(" WHERE ");
+        if (!batchUidCheck.isEmpty()) {
+            sb.append(TABLE_POSITIONS + "." + COLUMN_POSITIONS_BATCH_UID);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(batchUidCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!descriptionCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_POSITIONS + "." + COLUMN_POSITIONS_DESCRIPTION);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(descriptionCheck);
+            sb.append("'");
+            preCondition = true;
+        }
+
+        if (!titleCheck.isEmpty()) {
+            if(preCondition) {
+                sb.append(" AND ");
+            }
+            sb.append(TABLE_POSITIONS + "." + COLUMN_POSITIONS_TITLE);
+            sb.append(" = ");
+            sb.append("'");
+            sb.append(titleCheck);
+            sb.append("'");
+        }
+
+        try (Connection db = connect();
+             Statement statement1 = db.createStatement();
+             ResultSet results1 = statement1.executeQuery(sb.toString())){
+
+            List<Positions> positionsList = new ArrayList<>();
+            while (results1.next()) {
+                Positions position = new Positions();
+                position.setPk1(results1.getInt(COLUMN_POSITIONS_PK1));
+                position.setBatch_uid(results1.getString(COLUMN_POSITIONS_BATCH_UID));
+                position.setDescription(results1.getString(COLUMN_POSITIONS_DESCRIPTION));
+                position.setTittle(results1.getString(COLUMN_POSITIONS_TITLE));
+
+                positionsList.add(position);
+            }
+            closeConnection(db);
+            return positionsList;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // -- Method to insert positions in the positions table. Returns the number of rows modified --
+    public int insertPosition(Positions newPosition) {
+        sb = new StringBuilder(INSERT_POSITIONS);
+        sb.append("'");
+        sb.append(newPosition.getBatch_uid());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newPosition.getDescription());
+        sb.append("'");
+        sb.append(", ");
+        sb.append("'");
+        sb.append(newPosition.getTittle());
+        sb.append("'");
+        sb.append(")");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int results = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item added successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record created");
+            alert.showAndWait();
+            return results;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    public int updatePosition(Positions position, String newBatchUid, String newTitle, String newDescription) {
+        sb = new StringBuilder(UPDATE_POSITIONS);
+        sb.append(COLUMN_POSITIONS_BATCH_UID);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newBatchUid);
+        sb.append("', ");
+        sb.append(COLUMN_POSITIONS_TITLE);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newTitle);
+        sb.append("', ");
+        sb.append(COLUMN_POSITIONS_DESCRIPTION);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(newDescription);
+        sb.append("'");
+        sb.append(" WHERE ");
+        sb.append(COLUMN_POSITIONS_PK1);
+        sb.append(" = ");
+        sb.append("'");
+        sb.append(position.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            int result = statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item updated successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record Updated");
+            alert.showAndWait();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+            return 0;
+        }
+    }
+
+    // -- Method to deleted from the positions table --
+    public void deletePosition(Positions position) {
+        sb = new StringBuilder(DELETE_POSITIONS);
+        sb.append(position.getPk1());
+        sb.append("'");
+        try{
+            Connection db = connect();
+            Statement statement1 = db.createStatement();
+            statement1.executeUpdate(sb.toString());
+            closeConnection(db);
+            System.out.println("Item deleted successfully");
+            closeConnection(db);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Record deleted");
+            alert.showAndWait();
+        } catch (SQLException e) {
+            System.out.println("ERROR while trying to query: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 
     // -- Method to close the connection to the DB --
     public static void closeConnection(Connection conn) throws SQLException {

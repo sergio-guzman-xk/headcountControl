@@ -181,7 +181,7 @@ public class empl_update_deleteController {
                 // -- checks if the Salary is a valid double --
                 Double newEmpSalary = Double.parseDouble(showEmpSalary.getText());
                 try {
-                    // -- checks if the data is a valua date format yyyy-mm-dd --
+                    // -- checks if the data is a value date format yyyy-mm-dd --
                     Date newEmpConDate = Date.valueOf(showEmpConDate.getText());
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("UPDATE RECORD");

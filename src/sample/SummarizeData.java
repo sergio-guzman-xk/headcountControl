@@ -1,14 +1,19 @@
 package sample;
 
+import java.util.Date;
+
 // -- Modeled after the employees_campaigns table --
 public class SummarizeData {
 
+    private int pk1;
+    private String batch_uid;
     private String employee_id;
     private String first_name;
     private String last_name;
     private String campaign_name;
     private String shift;
     private String position;
+    private Date startDate;
     private int employees_pk1;
     private int campaigns_pk1;
     private int shifts_pk1;
@@ -17,19 +22,30 @@ public class SummarizeData {
     public SummarizeData() {
     }
 
-    public SummarizeData(String employee_id, String first_name, String last_name, String campaign_name, String shift,
-                         String position, int employees_pk1, int campaigns_pk1, int shifts_pk1, int positions_pk1) {
-        this.employee_id = employee_id;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.campaign_name = campaign_name;
-        this.shift = shift;
-        this.position = position;
-        this.employees_pk1 = employees_pk1;
-        this.campaigns_pk1 = campaigns_pk1;
-        this.shifts_pk1 = shifts_pk1;
-        this.positions_pk1 = positions_pk1;
+    public Date getStartDate() {
+        return startDate;
     }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public int getPk1() {
+        return pk1;
+    }
+
+    public void setPk1(int pk1) {
+        this.pk1 = pk1;
+    }
+
+    public String getBatch_uid() {
+        return batch_uid;
+    }
+
+    public void setBatch_uid(String batch_uid) {
+        this.batch_uid = batch_uid;
+    }
+
 
     public int getEmployees_pk1() {
         return employees_pk1;
