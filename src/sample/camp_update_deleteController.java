@@ -144,26 +144,36 @@ public class camp_update_deleteController {
             alert.showAndWait();
         } else {
             try {
-                // -- Use set methods to set the the values of the campaign object created before --
-                newCampaign.setBatch_uid(campBatchUidData);
-                newCampaign.setName(campNameData);
-                newCampaign.setCampaign_id(campCampIdData);
-                newCampaign.setContract_date(Date.valueOf(campConDateData));
-                newCampaign.setRenew_date(Date.valueOf(campRenDateData));
-                newCampaign.setHeadcount_req(Double.parseDouble(campHeadReqData));
-                newCampaign.setRevenue(Double.parseDouble(campRevenueData));
-                newCampaign.setPriority(campPriorData);
-                // -- Run the insertCampaign() to create the campaign in the DB. Assign the returned value to success --
-                int success = newData.insertCampaign(newCampaign);
-                // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
-                // -- If the above was a success then refresh the tableview to show the new data --
-                if(success != 0) {
-                    campaignPaneSearch();
+                Date campConDateData = Date.valueOf(showCampConDate.getText().trim());
+                Date campRenDateData = Date.valueOf(showCampRenDate.getText().trim());
+                try {
+                    double campHeadReqData = (Double.parseDouble(showCampHeadReq.getText().trim()));
+                    double campRevenueData = (Double.parseDouble(showCampRevenue.getText().trim()));
+                    // -- Use set methods to set the the values of the campaign object created before --
+                    newCampaign.setBatch_uid(campBatchUidData);
+                    newCampaign.setName(campNameData);
+                    newCampaign.setCampaign_id(campCampIdData);
+                    newCampaign.setContract_date(campConDateData);
+                    newCampaign.setRenew_date(campRenDateData);
+                    newCampaign.setHeadcount_req(campHeadReqData);
+                    newCampaign.setRevenue(campRevenueData);
+                    newCampaign.setPriority(campPriorData);
+                    // -- Run the insertCampaign() to create the campaign in the DB. Assign the returned value to success --
+                    int success = newData.insertCampaign(newCampaign);
+                    // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
+                    // -- If the above was a success then refresh the tableview to show the new data --
+                    if(success != 0) {
+                        campaignPaneSearch();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Empty or invalid value" + e.getCause());
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(e.getMessage());
+                    alert.showAndWait();
                 }
             } catch (Exception e) {
-                System.out.println("Empty or invalid value" + e.getCause());
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(e.getMessage());
+                alert.setHeaderText("ERROR: Date format must be yyyy-mm-dd. " + e.getMessage());
                 alert.showAndWait();
             }
         }
@@ -175,8 +185,8 @@ public class camp_update_deleteController {
         if(selectedCampaign != null) {
             try {
                 // -- checks if the double values are double --
-                Double newCampHeadReq = Double.parseDouble(showCampHeadReq.getText());
-                Double newCampRev = Double.parseDouble(showCampRevenue.getText());
+                double newCampHeadReq = Double.parseDouble(showCampHeadReq.getText());
+                double newCampRev = Double.parseDouble(showCampRevenue.getText());
                 try {
                     // -- checks if the data is a value date format yyyy-mm-dd --
                     Date newCampConDate = Date.valueOf(showCampConDate.getText());

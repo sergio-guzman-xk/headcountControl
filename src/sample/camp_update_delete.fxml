@@ -86,7 +86,7 @@
                                     <TextField fx:id="showCampCampId" GridPane.columnIndex="3" />
                                     <TextField fx:id="showCampHeadReq" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     <TextField fx:id="showCampRevenue" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                    <TextField fx:id="showCampRenDate" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                    <TextField fx:id="showCampRenDate" promptText="yyyy-mm-dd" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                                  </children>
                                  <BorderPane.margin>
                                     <Insets right="50.0" top="27.0" />

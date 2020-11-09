@@ -147,27 +147,41 @@ public class empl_update_deleteController {
             alert.setHeaderText("One or more fields are empty. The records was not created.");
             alert.showAndWait();
         } else {
-            try {
-                // -- Use set methods to set the the values of the employee object created before --
-                newEmployee.setBatch_uid(employeeBatchUidData);
-                newEmployee.setEmployee_id(employeeEmpIdData);
-                newEmployee.setFirst_name(employeeFirstNameData);
-                newEmployee.setLast_name(employeeLastNameData);
-                newEmployee.setEmail(employeeEmailData);
-                newEmployee.setSalary(Double.parseDouble(employeeSalaryData));
-                newEmployee.setContract_date(Date.valueOf(employeeConDateData));
-                newEmployee.setNational_id(employeeNatIdData);
-                // -- Run the insertEmployee() to create the user in the DB. Assign the returned value to success --
-                int success = newData.insertEmployee(newEmployee);
-                // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
-                // -- If the above was a success then refresh the tableview to show the new data --
-                if(success != 0) {
-                    employeePaneSearch();
+            try{
+                Date employeeConDateData = Date.valueOf(showEmpConDate.getText());
+                try {
+                    double employeeSalaryData = Double.parseDouble(showEmpSalary.getText().trim());
+                    try{
+                        // -- Use set methods to set the the values of the employee object created before --
+                        newEmployee.setBatch_uid(employeeBatchUidData);
+                        newEmployee.setEmployee_id(employeeEmpIdData);
+                        newEmployee.setFirst_name(employeeFirstNameData);
+                        newEmployee.setLast_name(employeeLastNameData);
+                        newEmployee.setEmail(employeeEmailData);
+                        newEmployee.setSalary(employeeSalaryData);
+                        newEmployee.setContract_date(employeeConDateData);
+                        newEmployee.setNational_id(employeeNatIdData);
+                        // -- Run the insertEmployee() to create the user in the DB. Assign the returned value to success --
+                        int success = newData.insertEmployee(newEmployee);
+                        // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
+                        // -- If the above was a success then refresh the tableview to show the new data --
+                        if(success != 0) {
+                            employeePaneSearch();
+                        }
+                    } catch (Exception e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setHeaderText(e.getMessage());
+                        alert.showAndWait();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Empty or invalid value" + e.getCause());
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(e.getMessage());
+                    alert.showAndWait();
                 }
             } catch (Exception e) {
-                System.out.println("Empty or invalid value" + e.getCause());
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(e.getMessage());
+                alert.setHeaderText("ERROR: Date format must be yyyy-mm-dd. " + e.getMessage());
                 alert.showAndWait();
             }
         }
@@ -179,7 +193,7 @@ public class empl_update_deleteController {
         if(selectedEmployee != null) {
             try {
                 // -- checks if the Salary is a valid double --
-                Double newEmpSalary = Double.parseDouble(showEmpSalary.getText());
+                double newEmpSalary = Double.parseDouble(showEmpSalary.getText());
                 try {
                     // -- checks if the data is a value date format yyyy-mm-dd --
                     Date newEmpConDate = Date.valueOf(showEmpConDate.getText());

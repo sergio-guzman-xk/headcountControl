@@ -139,29 +139,36 @@ public class assign_update_deleteController {
             alert.showAndWait();
         } else {
             try {
-                // -- Use set methods to set the the values of the employee object created before --
-                Employee employee = newData.queryEmployee(assignEmpBatchUidData);
-                Campaign campaign = newData.queryCampaign(assignCampBatchUidData);
-                Shift shift = newData.queryShift(assignShiftBatchUidData);
-                Positions position = newData.queryPosition(assignPosBatchUidData);
+                Date assignStartDateData = Date.valueOf(showAssignStartDate.getText().trim());
+                try {
+                    // -- Use set methods to set the the values of the employee object created before --
+                    Employee employee = newData.queryEmployee(assignEmpBatchUidData);
+                    Campaign campaign = newData.queryCampaign(assignCampBatchUidData);
+                    Shift shift = newData.queryShift(assignShiftBatchUidData);
+                    Positions position = newData.queryPosition(assignPosBatchUidData);
 
-                newAssign.setBatch_uid(assignBatchUidData);
-                newAssign.setEmployees_pk1(employee.getPk1());
-                newAssign.setCampaigns_pk1(campaign.getPk1());
-                newAssign.setShifts_pk1(shift.getPk1());
-                newAssign.setPositions_pk1(position.getPk1());
-                newAssign.setStartDate(Date.valueOf(assignStartDateData));
-                // -- Run the insertEmployee() to create the user in the DB. Assign the returned value to success --
-                int success = newData.insertSummarize(newAssign);
-                // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
-                // -- If the above was a success then refresh the tableview to show the new data --
-                if(success != 0) {
-                    assignPaneSearch();
+                    newAssign.setBatch_uid(assignBatchUidData);
+                    newAssign.setEmployees_pk1(employee.getPk1());
+                    newAssign.setCampaigns_pk1(campaign.getPk1());
+                    newAssign.setShifts_pk1(shift.getPk1());
+                    newAssign.setPositions_pk1(position.getPk1());
+                    newAssign.setStartDate(assignStartDateData);
+                    // -- Run the insertEmployee() to create the user in the DB. Assign the returned value to success --
+                    int success = newData.insertSummarize(newAssign);
+                    // -- If it returns 0 is because 0 rows where modified thus the above was not execute --
+                    // -- If the above was a success then refresh the tableview to show the new data --
+                    if(success != 0) {
+                        assignPaneSearch();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Empty or invalid value" + e.getCause());
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(e.getMessage());
+                    alert.showAndWait();
                 }
             } catch (Exception e) {
-                System.out.println("Empty or invalid value" + e.getCause());
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(e.getMessage());
+                alert.setHeaderText("ERROR: Date format must be yyyy-mm-dd. " + e.getMessage());
                 alert.showAndWait();
             }
         }

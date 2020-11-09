@@ -121,6 +121,7 @@ public class AppData {
             " = '";
 
     StringBuilder sb = new StringBuilder();
+    private PreparedStatement currentStatement;
     private Connection conn;
     // -- Connection to the DB is defined --
     public Connection connect() throws SQLException {
