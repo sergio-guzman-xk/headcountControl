@@ -105,7 +105,6 @@ public class empl_update_deleteController {
                 colEmpSalary.setCellValueFactory(c -> new SimpleStringProperty(String.format("%.0f", c.getValue().getSalary())));
                 colEmpConDate.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getContract_date())));
                 colEmpNatID.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNational_id()));
-
             }
         }
     }
@@ -122,7 +121,6 @@ public class empl_update_deleteController {
             showEmpSalary.setText(String.format("%.0f",selectedEmployee.getSalary()));
             showEmpConDate.setText(String.valueOf(selectedEmployee.getContract_date()));
             showEmpNatId.setText(selectedEmployee.getNational_id());
-            System.out.println(selectedEmployee.getPk1());
         }
     }
 

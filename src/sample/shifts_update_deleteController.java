@@ -77,7 +77,6 @@ public class shifts_update_deleteController {
             showShiftBatchUid.setText(selectedShift.getBatch_uid());
             showShiftSchedule.setText(selectedShift.getTime());
             showShiftDescription.setText(selectedShift.getDescription());
-            System.out.println(selectedShift.getPk1());
         }
     }
 

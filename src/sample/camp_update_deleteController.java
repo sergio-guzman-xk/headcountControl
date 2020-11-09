@@ -101,7 +101,6 @@ public class camp_update_deleteController {
                 colCampRev.setCellValueFactory(c -> new SimpleStringProperty(String.format("%.0f", c.getValue().getRevenue())));
                 colCampConDate.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getContract_date())));
                 colCampRenDate.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getRenew_date())));
-
             }
         }
     }
@@ -118,7 +117,6 @@ public class camp_update_deleteController {
             showCampRevenue.setText(String.format("%.0f",selectedCampaign.getRevenue()));
             showCampConDate.setText(String.valueOf(selectedCampaign.getContract_date()));
             showCampRenDate.setText(String.valueOf(selectedCampaign.getRenew_date()));
-            System.out.println(selectedCampaign.getPk1());
         }
     }
 

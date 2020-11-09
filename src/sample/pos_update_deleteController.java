@@ -76,7 +76,6 @@ public class pos_update_deleteController {
             showPositionsBatchUid.setText(selectedPosition.getBatch_uid());
             showPositionsTitle.setText(selectedPosition.getTittle());
             showPositionsDescription.setText(selectedPosition.getDescription());
-            System.out.println(selectedPosition.getPk1());
         }
     }
 

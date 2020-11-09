@@ -19,7 +19,6 @@ public class interactionWindowController {
 
     // -- Employee Button. Displays the employees window UI --
     public void employeeChangeRequest() throws IOException {
-        System.out.println("Employee Button was pressed. Do something");
         sample.AppData.sceneChange(interactionWindowDiag.getScene(), "empl_update_delete.fxml");
     }
 

@@ -116,7 +116,6 @@ public class assign_update_deleteController {
             showAssignShiftBatchUid.setText(shift.getBatch_uid());
             showAssignPosBatchUid.setText(position.getBatch_uid());
             showAssignStartDate.setText(String.valueOf(selectedData.getStartDate()));
-
         }
     }
 
